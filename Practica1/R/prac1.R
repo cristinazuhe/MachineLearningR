@@ -44,8 +44,20 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
 }
 
 #EJERCICIO 4.2.3
-lista3 = simula_unif(50,5,-50:50)
-x=runif(10, 0, 1) 
-print(x)
-hist(x,probability=TRUE,col=gray(.5),main="uniform on [0,1]") 
-#curve(dunif(x,0,1),add=T) # Densidad 
+#Genero la lista de vectores con la funcion y los valores que nos indican
+N=50
+dim=5
+lista3 = simula_unif(N,dim,-50:50)
+
+#Creo un vector con los valores y (valores aleatorios generados).
+#Creo un vector con los valores x (indice de lista del valor).
+lista33y = NULL #en lista33y tendre todos los valores y.
+lista33x = NULL #en lista33y tendre todos los valores x.
+for(j in 1:N){
+  for(i in 1:dim){
+     lista31 = lista3[[j]][i]
+     lista33y = c(lista33y, lista31)
+     lista33x = c(lista33x, j)
+  }
+} 
+plot(lista33x, lista33y)
