@@ -56,18 +56,23 @@ N=50
 dim=2
 lista3 = simula_unif(N,dim,-50:50)
 
-#Creo un vector con los valores y (valores aleatorios generados).
-#Creo un vector con los valores x (indice de lista del valor).
+#Creo un vector con los valores y (valores aleatorios generados impares).
+#Creo un vector con los valores x (valores aleatorios generados pares).
 lista33y = NULL #en lista33y tendre todos los valores y.
 lista33x = NULL #en lista33y tendre todos los valores x.
+contador=2
 for(j in 1:N){
   for(i in 1:dim){
-     lista31 = lista3[[j]][i]
-     lista33y = c(lista33y, lista31)
-     lista33x = c(lista33x, j)
+    if((contador%%2) == 0){
+     lista33y = c(lista33y, lista3[[j]][i])
+    }
+    else{
+     lista33x = c(lista33x, lista3[[j]][i])
+    }
+     contador = contador+1
   }
 } 
-plot(lista33x, lista33y, xlab= "índice en lista", ylab="valor aleatorio uniforme", 
+plot(lista33x, lista33y, 
      main = "Valores función uniforme",col="purple")
 
 ###################################################
@@ -82,14 +87,18 @@ lista4 = simula_gaus(N,dim,5:7)
 #Creo un vector con los valores x (indice de lista del valor).
 lista42y = NULL #en lista42y tendre todos los valores y.
 lista42x = NULL #en lista42y tendre todos los valores x.
+contador4=2
 for(j in 1:N){
   for(i in 1:dim){
-    lista41 = lista4[[j]][i]
-    lista42y = c(lista42y, lista41)
-    lista42x = c(lista42x, j)
+    if((contador4%%2) == 0){
+      lista42y = c(lista42y, lista4[[j]][i])
+    }else{
+      lista42x = c(lista42x, lista4[[j]][i])
+    }
+    contador4 = contador4 +1
   }
 } 
-plot(lista42x,lista42y, xlab= "índice en lista", ylab="valor aleatorio gaussiano", 
+plot(lista42x,lista42y, 
      main = "Valores función gaussiana", col="orange")
 
 
@@ -117,7 +126,8 @@ simula_recta <- function(intervalo=-50:50, a=NA){
   #Represento el cuadrado de trabajo, los puntos y la recta que los une
   plot(x,y, col= "red", 
        xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-       ylim = c(intervalo[1], intervalo[length(intervalo)])) 
+       ylim = c(intervalo[1], intervalo[length(intervalo)]),
+       main="Recta cortando al cuadrado. ") 
   abline(b,a) # Recta ax+b (pendiente a)(corte b)
 
   val=c(a,b)
@@ -139,11 +149,16 @@ dim=2
 lista6 = simula_unif(N,dim,-50:50)
 lista61y = NULL #en lista61y tendre todos los valores y.
 lista61x = NULL #en lista61y tendre todos los valores x.
+contador6 =2
 for(j in 1:N){
   for(i in 1:dim){
-    lista62 = lista6[[j]][i]
-    lista61y = c(lista61y, lista62)
-    lista61x = c(lista61x, j)
+    if((contador6%%2) == 0){
+      lista61y = c(lista61y, lista6[[j]][i])
+    }
+    else{
+      lista61x = c(lista61x, lista6[[j]][i])
+    }
+    contador6 = contador6+1
   }
 }
 
