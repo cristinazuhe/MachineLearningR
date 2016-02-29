@@ -52,17 +52,18 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
 ##################EJERCICIO 4.2.3##################
 ###################################################
 #Genero la lista de vectores con la funcion y los valores que nos indican
-N=50
-dim=2
-lista3 = simula_unif(N,dim,-50:50)
+N3=50
+dim3=2
+intervalo3 = -50:50
+lista3 = simula_unif(N3,dim3,intervalo3)
 
 #Creo un vector con los valores y (valores aleatorios generados impares).
 #Creo un vector con los valores x (valores aleatorios generados pares).
 lista33y = NULL #en lista33y tendre todos los valores y.
 lista33x = NULL #en lista33y tendre todos los valores x.
 contador=2
-for(j in 1:N){
-  for(i in 1:dim){
+for(j in 1:N3){
+  for(i in 1:dim3){
     if((contador%%2) == 0){
      lista33y = c(lista33y, lista3[[j]][i])
     }
@@ -79,17 +80,18 @@ plot(lista33x, lista33y,
 ##################EJERCICIO 4.2.4##################
 ###################################################
 #Genero la lista de vectores con la funcion y los valores que nos indican
-N=50
-dim=2
-lista4 = simula_gaus(N,dim,5:7)
+N4=50
+dim4=2
+intervalo4 = 5:7
+lista4 = simula_gaus(N,dim,intervalo4)
 
 #Creo un vector con los valores y (valores aleatorios generados).
 #Creo un vector con los valores x (indice de lista del valor).
 lista42y = NULL #en lista42y tendre todos los valores y.
 lista42x = NULL #en lista42y tendre todos los valores x.
 contador4=2
-for(j in 1:N){
-  for(i in 1:dim){
+for(j in 1:N4){
+  for(i in 1:dim4){
     if((contador4%%2) == 0){
       lista42y = c(lista42y, lista4[[j]][i])
     }else{
@@ -144,14 +146,15 @@ a = val[1]
 b = val[2]
 
 #Genero los datos aleatorios uniformes y los represento junto a la recta
-N=50
-dim=2
-lista6 = simula_unif(N,dim,-50:50)
+N6=50
+dim6=2
+intervalo6 = -50:50
+lista6 = simula_unif(N6,dim6,intervalo6)
 lista61y = NULL #en lista61y tendre todos los valores y.
 lista61x = NULL #en lista61y tendre todos los valores x.
 contador6 =2
-for(j in 1:N){
-  for(i in 1:dim){
+for(j in 1:N6){
+  for(i in 1:dim6){
     if((contador6%%2) == 0){
       lista61y = c(lista61y, lista6[[j]][i])
     }
@@ -244,23 +247,27 @@ for(k in 1:length(lista61x)){
 }
 
 plot(lista71xpos1,lista71ypos1, col = "purple",
-     xlim = c(-50, 50), 
-     ylim = c(-50, 50), main = "Primera funcion")
+     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     main = "Primera funcion")
 points(lista71xneg1,lista71yneg1, col = "green")
 
 plot(lista71xpos2,lista71ypos2, col = "purple",
-     xlim = c(-50, 50), 
-     ylim = c(-50, 50), main = "Segunda funcion")
+     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     main = "Segunda funcion")
 points(lista71xneg2,lista71yneg2, col = "green")
 
 plot(lista71xpos3,lista71ypos3, col = "purple",
-     xlim = c(-50, 50), 
-     ylim = c(-50, 50), main = "Tercera funcion")
+     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     main = "Tercera funcion")
 points(lista71xneg3,lista71yneg3, col = "green")
 
 plot(lista71xpos4,lista71ypos4, col = "purple",
-     xlim = c(-50, 50), 
-     ylim = c(-50, 50), main = "Cuarta funcion")
+     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     main = "Cuarta funcion")
 points(lista71xneg4,lista71yneg4, col = "green")
 
 
