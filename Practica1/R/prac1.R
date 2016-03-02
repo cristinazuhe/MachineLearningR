@@ -246,32 +246,63 @@ for(k in 1:length(lista61x)){
   }
 }
 
+x7=-50
+contador=0
+while(contador< 1000){
+  x7 = c(x7, x7[length(x7)] + 0.10)
+  contador=contador+1; 
+}
+
 plot(lista71xpos1,lista71ypos1, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Primera funcion")
 points(lista71xneg1,lista71yneg1, col = "green")
+y71 = 20 - sqrt(400-(x7-10)^2)
+y72 = 20 + sqrt(400-(x7-10)^2)
+points(x7, y71, col="orange", type="l")
+points(x7, y72, col="orange", type="l")
 
 plot(lista71xpos2,lista71ypos2, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Segunda funcion")
 points(lista71xneg2,lista71yneg2, col = "green")
+y72a = 20 - sqrt(400-0.5*(x7+10)^2)
+y72b= 20 + sqrt(400-0.5*(x7+10)^2)
+points(x7, y72a, col="orange", type="l")
+points(x7, y72b, col="orange", type="l")
 
 plot(lista71xpos3,lista71ypos3, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Tercera funcion")
 points(lista71xneg3,lista71yneg3, col = "green")
+y73a = -sqrt(0.5*(x7-10)^2 -400) -20
+y73b = sqrt(0.5*(x7-10)^2 -400) -20
+points(x7, y73a, col="orange", type="l")
+points(x7, y73b, col="orange", type="l")
 
 plot(lista71xpos4,lista71ypos4, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Cuarta funcion")
 points(lista71xneg4,lista71yneg4, col = "green")
+y74 = 20*x7^2 +5*x7 -3
+points(x7, y74, col="orange", type="l")
 
 
 ###################################################
 ##################EJERCICIO 4.2.8##################
 ###################################################
+#pinto las funciones del ejercicio 7
+#funcion 4
+
+
+
+
+
+
+
+
 
