@@ -83,7 +83,7 @@ plot(lista33x, lista33y,
 N4=50
 dim4=2
 intervalo4 = 5:7
-lista4 = simula_gaus(N,dim,intervalo4)
+lista4 = simula_gaus(N4,dim4,intervalo4)
 
 #Creo un vector con los valores y (valores aleatorios generados).
 #Creo un vector con los valores x (indice de lista del valor).
@@ -247,26 +247,26 @@ for(k in 1:length(lista61x)){
 }
 
 plot(lista71xpos1,lista71ypos1, col = "purple",
-     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Primera funcion")
 points(lista71xneg1,lista71yneg1, col = "green")
 
 plot(lista71xpos2,lista71ypos2, col = "purple",
-     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Segunda funcion")
 points(lista71xneg2,lista71yneg2, col = "green")
 
 plot(lista71xpos3,lista71ypos3, col = "purple",
-     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Tercera funcion")
 points(lista71xneg3,lista71yneg3, col = "green")
 
 plot(lista71xpos4,lista71ypos4, col = "purple",
-     xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-     ylim = c(intervalo[1], intervalo[length(intervalo)]),
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Cuarta funcion")
 points(lista71xneg4,lista71yneg4, col = "green")
 
