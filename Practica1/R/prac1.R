@@ -187,76 +187,10 @@ for(k in 1:length(lista61x)){
 ###################################################
 ##################EJERCICIO 4.2.7##################
 ###################################################
-lista71xpos1 = NULL
-lista71ypos1 = NULL
-lista71xneg1 = NULL
-lista71yneg1 = NULL
-lista71xpos2 = NULL
-lista71ypos2 = NULL
-lista71xneg2 = NULL
-lista71yneg2 = NULL
-lista71xpos3 = NULL
-lista71ypos3 = NULL
-lista71xneg3 = NULL
-lista71yneg3 = NULL
-lista71xpos4 = NULL
-lista71ypos4 = NULL
-lista71xneg4 = NULL
-lista71yneg4 = NULL
 etiquetas71 = NULL
 etiquetas72 = NULL
 etiquetas73 = NULL
 etiquetas74 = NULL
-for(k in 1:length(lista61x)){
-  num1 = (lista61x[k] - 10)^2 + (lista61y[k] - 20)^2 -400
-  num2 = 0.5*(lista61x[k] + 10)^2 + (lista61y[k] - 20)^2 -400
-  num3 = 0.5*(lista61x[k] - 10)^2 - (lista61y[k] + 20)^2 -400
-  num4 = lista61y[k] - 20*((lista61x[k])^2) - 5*(lista61x[k]) +3
-  #Para primera funcion
-  if(num1>0){
-    lista71xpos1 = c(lista71xpos1, lista61x[k])
-    lista71ypos1 = c(lista71ypos1, lista61y[k])
-    etiquetas71 = c(etiquetas71, 1)
-  }
-  else if(num1<0){
-    lista71xneg1 = c(lista71xneg1, lista61x[k])
-    lista71yneg1 = c(lista71yneg1, lista61y[k])
-    etiquetas71 = c(etiquetas71, -1)
-  }
-  #Para segunda funcion
-  if(num2>0){
-    lista71xpos2 = c(lista71xpos2, lista61x[k])
-    lista71ypos2 = c(lista71ypos2, lista61y[k])
-    etiquetas72 = c(etiquetas72, 1)
-  }
-  else if(num2<0){
-    lista71xneg2 = c(lista71xneg2, lista61x[k])
-    lista71yneg2 = c(lista71yneg2, lista61y[k])
-    etiquetas72 = c(etiquetas72, -1)
-  }
-  #Para tercera funcion
-  if(num3>0){
-    lista71xpos3 = c(lista71xpos3, lista61x[k])
-    lista71ypos3 = c(lista71ypos3, lista61y[k])
-    etiquetas73 = c(etiquetas73, 1)
-  }
-  else if(num3<0){
-    lista71xneg3 = c(lista71xneg3, lista61x[k])
-    lista71yneg3 = c(lista71yneg3, lista61y[k])
-    etiquetas73 = c(etiquetas73, -1)
-  }
-  #Para cuarta funcion
-  if(num4>0){
-    lista71xpos4 = c(lista71xpos4, lista61x[k])
-    lista71ypos4 = c(lista71ypos4, lista61y[k])
-    etiquetas74 = c(etiquetas74, 1)
-  }
-  else if(num4<0){
-    lista71xneg4 = c(lista71xneg4, lista61x[k])
-    lista71yneg4 = c(lista71yneg4, lista61y[k])
-    etiquetas74 = c(etiquetas74, -1)
-  }
-}
 
 x7=-50
 contador=0
@@ -265,43 +199,87 @@ while(contador< 1000){
   contador=contador+1; 
 }
 
-plot(lista71xpos1,lista71ypos1, col = "purple",
-     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
-     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "Primera funcion")
-points(lista71xneg1,lista71yneg1, col = "green")
+#PRIMERA FUNCION.
 y71a = 20 - sqrt(400-(x7-10)^2)
 y71b = 20 + sqrt(400-(x7-10)^2)
-points(x7, y71a, col="orange", type="l")
-points(x7, y71b, col="orange", type="l")
-
-plot(lista71xpos2,lista71ypos2, col = "purple",
+plot(x7,y71a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "Segunda funcion")
-points(lista71xneg2,lista71yneg2, col = "green")
+     main = "4.2.7:Primera funcion.", type="l")
+points(x7, y71b, col="purple", type="l")
+
+for(k in 1:length(lista61x)){
+  num1 = (lista61x[k] - 10)^2 + (lista61y[k] - 20)^2 -400
+  if(num1>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+    etiquetas71 = c(etiquetas71, 1)
+  }
+  if(num1<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+    etiquetas71 = c(etiquetas71, -1)
+  }
+}
+
+#SEGUNDA FUNCION
 y72a = 20 - sqrt(400-0.5*(x7+10)^2)
 y72b= 20 + sqrt(400-0.5*(x7+10)^2)
-points(x7, y72a, col="orange", type="l")
-points(x7, y72b, col="orange", type="l")
-
-plot(lista71xpos3,lista71ypos3, col = "purple",
+plot(x7,y72a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "Tercera funcion")
-points(lista71xneg3,lista71yneg3, col = "green")
+     main = "4.2.7:Segunda funcion.", type="l")
+points(x7, y72b, col="purple", type="l")
+
+for(k in 1:length(lista61x)){
+  num2 = 0.5*(lista61x[k] + 10)^2 + (lista61y[k] - 20)^2 -400
+  if(num2>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+    etiquetas72 = c(etiquetas72, 1)
+  }
+  if(num2<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+    etiquetas72 = c(etiquetas72, -1)
+  }
+}
+
+#TERCERA FUNCION
 y73a = -sqrt(0.5*(x7-10)^2 -400) -20
 y73b = sqrt(0.5*(x7-10)^2 -400) -20
-points(x7, y73a, col="orange", type="l")
-points(x7, y73b, col="orange", type="l")
-
-plot(lista71xpos4,lista71ypos4, col = "purple",
+plot(x7,y73a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "Cuarta funcion")
-points(lista71xneg4,lista71yneg4, col = "green")
+     main = "4.2.7:Tercera funcion.", type="l")
+points(x7, y73b, col="purple", type="l")
+
+for(k in 1:length(lista61x)){
+  num3 = 0.5*(lista61x[k] - 10)^2 - (lista61y[k] + 20)^2 -400
+  if(num3>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+    etiquetas73 = c(etiquetas73, 1)
+  }
+  if(num3<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+    etiquetas73 = c(etiquetas73, -1)
+  }
+}
+
+#CUARTA FUNCION
 y74 = 20*x7^2 +5*x7 -3
-points(x7, y74, col="orange", type="l")
+plot(x7,y74, col = "purple",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     main = "4.2.7:Cuarta funcion.", type="l")
+
+for(k in 1:length(lista61x)){
+  num4 = lista61y[k] - 20*((lista61x[k])^2) - 5*(lista61x[k]) +3
+  if(num4>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+    etiquetas74 = c(etiquetas74, 1)
+  }
+  if(num4<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+    etiquetas74 = c(etiquetas74, -1)
+  }
+}
 
 
 ###################################################
