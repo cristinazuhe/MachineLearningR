@@ -169,18 +169,20 @@ lista61xpos = NULL
 lista61ypos = NULL
 lista61xneg = NULL
 lista61yneg = NULL
+etiquetas6 = NULL
 for(k in 1:length(lista61x)){
   num = lista61y[k] -a*lista61x[k] -b
   if(num>0){
     lista61xpos = c(lista61xpos, lista61x[k])
     lista61ypos = c(lista61ypos, lista61y[k])
+    etiquetas6 = c(etiquetas6, 1)
   }
   if(num<0){
     lista61xneg = c(lista61xneg, lista61x[k])
     lista61yneg = c(lista61yneg, lista61y[k])
+    etiquetas6 = c(etiquetas6, -1)
   }
 }
-
 points(lista61xpos,lista61ypos, col = "purple")
 points(lista61xneg,lista61yneg, col = "green")
 
@@ -203,6 +205,10 @@ lista71xpos4 = NULL
 lista71ypos4 = NULL
 lista71xneg4 = NULL
 lista71yneg4 = NULL
+etiquetas71 = NULL
+etiquetas72 = NULL
+etiquetas73 = NULL
+etiquetas74 = NULL
 for(k in 1:length(lista61x)){
   num1 = (lista61x[k] - 10)^2 + (lista61y[k] - 20)^2 -400
   num2 = 0.5*(lista61x[k] + 10)^2 + (lista61y[k] - 20)^2 -400
@@ -212,37 +218,45 @@ for(k in 1:length(lista61x)){
   if(num1>0){
     lista71xpos1 = c(lista71xpos1, lista61x[k])
     lista71ypos1 = c(lista71ypos1, lista61y[k])
+    etiquetas71 = c(etiquetas71, 1)
   }
   else if(num1<0){
     lista71xneg1 = c(lista71xneg1, lista61x[k])
     lista71yneg1 = c(lista71yneg1, lista61y[k])
+    etiquetas71 = c(etiquetas71, -1)
   }
   #Para segunda funcion
   if(num2>0){
     lista71xpos2 = c(lista71xpos2, lista61x[k])
     lista71ypos2 = c(lista71ypos2, lista61y[k])
+    etiquetas72 = c(etiquetas72, 1)
   }
   else if(num2<0){
     lista71xneg2 = c(lista71xneg2, lista61x[k])
     lista71yneg2 = c(lista71yneg2, lista61y[k])
+    etiquetas72 = c(etiquetas72, -1)
   }
   #Para tercera funcion
   if(num3>0){
     lista71xpos3 = c(lista71xpos3, lista61x[k])
     lista71ypos3 = c(lista71ypos3, lista61y[k])
+    etiquetas73 = c(etiquetas73, 1)
   }
   else if(num3<0){
     lista71xneg3 = c(lista71xneg3, lista61x[k])
     lista71yneg3 = c(lista71yneg3, lista61y[k])
+    etiquetas73 = c(etiquetas73, -1)
   }
   #Para cuarta funcion
   if(num4>0){
     lista71xpos4 = c(lista71xpos4, lista61x[k])
     lista71ypos4 = c(lista71ypos4, lista61y[k])
+    etiquetas74 = c(etiquetas74, 1)
   }
   else if(num4<0){
     lista71xneg4 = c(lista71xneg4, lista61x[k])
     lista71yneg4 = c(lista71yneg4, lista61y[k])
+    etiquetas74 = c(etiquetas74, -1)
   }
 }
 
@@ -258,10 +272,10 @@ plot(lista71xpos1,lista71ypos1, col = "purple",
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "Primera funcion")
 points(lista71xneg1,lista71yneg1, col = "green")
-y71 = 20 - sqrt(400-(x7-10)^2)
-y72 = 20 + sqrt(400-(x7-10)^2)
-points(x7, y71, col="orange", type="l")
-points(x7, y72, col="orange", type="l")
+y71a = 20 - sqrt(400-(x7-10)^2)
+y71b = 20 + sqrt(400-(x7-10)^2)
+points(x7, y71a, col="orange", type="l")
+points(x7, y71b, col="orange", type="l")
 
 plot(lista71xpos2,lista71ypos2, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
@@ -295,14 +309,89 @@ points(x7, y74, col="orange", type="l")
 ###################################################
 ##################EJERCICIO 4.2.8##################
 ###################################################
-#pinto las funciones del ejercicio 7
-#funcion 4
+#PARTE A
+auxiliar6 = etiquetas6
+numeropositivos8 =0
+for(i in 1:length(etiquetas6)) {
+ if(etiquetas6[i] == 1)
+  numeropositivos8 = numeropositivos8+1
+}
+numeronegativos8 = length(etiquetas6) - numeropositivos8
+
+positivosacambiar8 = numeropositivos8%/%10
+negativosacambiar8 = numeronegativos8%/%10
+
+#Cambio positivos aleatorios a negativos.
+aleatorio6 = NULL
+for(j in 1:positivosacambiar8){
+  aleatorio6 = sample(1:length(etiquetas6),1)
+   while( etiquetas6[aleatorio6] != 1){
+     aleatorio6 = sample(1:length(etiquetas6),1)
+   }
+    etiquetas6[aleatorio6] = -1;
+}
+
+#Cambio negativos aleatorios a positivos.
+aleatorio6b = NULL
+for(j in 1:negativosacambiar8){
+  aleatorio6b = sample(1:length(etiquetas6),1)
+  while( etiquetas6[aleatorio6b] != -1 && auxiliar6[aleatorio6b] == etiquetas6[aleatorio6b] ){
+    aleatorio6b = sample(1:length(etiquetas6),1)
+  }
+  etiquetas6[aleatorio6b] = 1;
+}
+
+plot(lista61x, lista61y, col = "orange", main="Ejercicio 8")
+abline(b,a) # Recta ax+b (pendiente a)(corte b)
+#En etiquetas6 ya tengo la muestra con las etiquetas cambiadas
+for(i in 1:length(etiquetas6)){
+  if(etiquetas6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "purple")
+  }else
+    points(lista61x[i], lista61y[i], col = "green")
+}
 
 
+#PARTE B
+#con primera funcion:
+plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Primera")
+for(i in 1:length(etiquetas6)){
+  if(etiquetas6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "purple")
+  }else
+    points(lista61x[i], lista61y[i], col = "green")
+}
+points(x7, y71a, col="orange", type="l")
+points(x7, y71b, col="orange", type="l")
 
+#Con segunda funcion
+plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Segunda")
+for(i in 1:length(etiquetas6)){
+  if(etiquetas6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "purple")
+  }else
+    points(lista61x[i], lista61y[i], col = "green")
+}
+points(x7, y72a, col="orange", type="l")
+points(x7, y72b, col="orange", type="l")
 
+#Con tercera funcion
+plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Tercera")
+for(i in 1:length(etiquetas6)){
+  if(etiquetas6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "purple")
+  }else
+    points(lista61x[i], lista61y[i], col = "green")
+}
+points(x7, y73a, col="orange", type="l")
+points(x7, y73b, col="orange", type="l")
 
-
-
-
-
+#Con cuarta funcion
+plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Cuarta")
+for(i in 1:length(etiquetas6)){
+  if(etiquetas6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "purple")
+  }else
+    points(lista61x[i], lista61y[i], col = "green")
+}
+points(x7, y74, col="orange", type="l")
