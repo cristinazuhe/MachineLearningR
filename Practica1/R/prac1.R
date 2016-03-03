@@ -187,12 +187,14 @@ for(k in 1:length(lista61x)){
 ###################################################
 ##################EJERCICIO 4.2.7##################
 ###################################################
-etiquetas71 = NULL
-etiquetas72 = NULL
-etiquetas73 = NULL
-etiquetas74 = NULL
+etiquetas71 = NULL     #Vector con etiquetas para funcion1
+etiquetas72 = NULL     #Vector con etiquetas para funcion2
+etiquetas73 = NULL     #Vector con etiquetas para funcion3
+etiquetas74 = NULL     #Vector con etiquetas para funcion4
 
-x7=-50
+#x7 es un vector con valores en el intervalo de trabajo.
+#Util para dibujar las funciones1, 2, 3 y 4.
+x7=intervalo6[1]
 contador=0
 while(contador< 1000){
   x7 = c(x7, x7[length(x7)] + 0.10)
@@ -200,26 +202,30 @@ while(contador< 1000){
 }
 
 #PRIMERA FUNCION.
+#Valores en eje y de la primera funcion
 y71a = 20 - sqrt(400-(x7-10)^2)
 y71b = 20 + sqrt(400-(x7-10)^2)
+#Dibujo la primera funcion en una nueva gráfica
 plot(x7,y71a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "4.2.7:Primera funcion.", type="l")
 points(x7, y71b, col="purple", type="l")
 
+#Dibujo los puntos del apartado 6 etiquetándolos de acuerdo a la segunda función
 for(k in 1:length(lista61x)){
   num1 = (lista61x[k] - 10)^2 + (lista61y[k] - 20)^2 -400
   if(num1>0){                                       #valores positivos de la funcion--> etiqueta 1.
-    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+    points(lista61x[k], lista61y[k],col= "orange")  #Los pinto en color naranja
     etiquetas71 = c(etiquetas71, 1)
   }
   if(num1<0){                                       #valores negativos de la funcion-->etiqueta -1
-    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+    points(lista61x[k], lista61y[k], col="green")   #Los pinto en color verde
     etiquetas71 = c(etiquetas71, -1)
   }
 }
 
+#Analogo para...
 #SEGUNDA FUNCION
 y72a = 20 - sqrt(400-0.5*(x7+10)^2)
 y72b= 20 + sqrt(400-0.5*(x7+10)^2)
@@ -241,6 +247,8 @@ for(k in 1:length(lista61x)){
   }
 }
 
+
+#Analogo para...
 #TERCERA FUNCION
 y73a = -sqrt(0.5*(x7-10)^2 -400) -20
 y73b = sqrt(0.5*(x7-10)^2 -400) -20
@@ -262,6 +270,8 @@ for(k in 1:length(lista61x)){
   }
 }
 
+
+#Analogo para...
 #CUARTA FUNCION
 y74 = 20*x7^2 +5*x7 -3
 plot(x7,y74, col = "purple",
