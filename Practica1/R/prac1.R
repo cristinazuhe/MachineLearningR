@@ -10,17 +10,19 @@ simula_unif <- function(N=3, dim=5, rang=0:9) {
     print("La dimension del vector no puede ser negativa.")
     return(NA)
   }
-  ini_vector = runif(dim, rang[1], rang[length(rang)])                          #vector de tamaño dim con valores aleatorios uniformes en el intervalo 0-rango
+  ini_vector = runif(dim, rang[1], rang[length(rang)])      #vector de tamaño dim con valores aleatorios uniformes en el intervalo rang
   mi_lista = list(ini_vector)                               #creo mi lista con el vector
   if(N>1){                                                  #Si nos piden más de un vector en la lista....
      for( i in 2:N){                                        #Para cada nuevo vector de la lista...
-       ini_vector = runif(dim, rang[1],rang[length(rang)])                    #vector de tamaño dim con valores aleatorios uniformes en el intervalo 0-rango
+       ini_vector = runif(dim, rang[1],rang[length(rang)])  #vector de tamaño dim con valores aleatorios uniformes en el intervalo rang
        segunda = list(ini_vector)                           #creo una lista auxiliar con el nuevo vector
        mi_lista = c(mi_lista, segunda)                      #concateno a mi lista anterior la nueva lista que contiene el nuevo vector.
      }
   }
   return(mi_lista)
 }
+print("Salima simula_unif por defecto:")
+print(simula_unif())
 
 ###################################################
 ##################EJERCICIO 4.2.2##################
@@ -32,15 +34,15 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
   }else if(dim<0){                                          #Si paso dimension del vector negativa, no creo lista con valores buenos.
     print("La dimension del vector no puede ser negativa.")
     return(NA)
-  }else if(sigma[1]<0 || sigma[length(sigma)]<0){
+  }else if(sigma[1]<0 || sigma[length(sigma)]<0){           #sigma no puede ser negativo
     print("Sigma no puede ser negativo.")
     return(NA)
   }
-  ini_vector = rnorm(dim, mean=0, sd=sample(sigma,1))                 #vector de tamaño dim con valores aleatorios gaussianos con media 0 y varianza sigma
+  ini_vector = rnorm(dim, mean=0, sd=sample(sigma,1))       #vector de tamaño dim con valores aleatorios gaussianos con media 0 y varianza sigma
   mi_lista = list(ini_vector)                               #creo mi lista con el vector
   if(N>1){                                                  #Si nos piden más de un vector en la lista....
     for( i in 2:N){                                         #Para cada nuevo vector de la lista...
-      ini_vector = rnorm(dim, mean=0, sd=sample(sigma,1))             #vector de tamaño dim con valores aleatorios gaussianos con media 0 y varianza sigma
+      ini_vector = rnorm(dim, mean=0, sd=sample(sigma,1))   #vector de tamaño dim con valores aleatorios gaussianos con media 0 y varianza sigma
       segunda = list(ini_vector)                            #creo una lista auxiliar con el nuevo vector
       mi_lista = c(mi_lista, segunda)                       #concateno a mi lista anterior la nueva lista que contiene el nuevo vector.
     }
@@ -55,26 +57,28 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
 N3=50
 dim3=2
 intervalo3 = -50:50
-lista3 = simula_unif(N3,dim3,intervalo3)
+lista3 = simula_unif(N3,dim3,intervalo3)      #Obtengo la lista de vectores de la funcion
 
-#Creo un vector con los valores y (valores aleatorios generados impares).
-#Creo un vector con los valores x (valores aleatorios generados pares).
-lista33y = NULL #en lista33y tendre todos los valores y.
-lista33x = NULL #en lista33y tendre todos los valores x.
+#Creo un vector con los valores y (valores aleatorios generados pares).
+#Creo un vector con los valores x (valores aleatorios generados impares).
+lista3y = NULL                               #en lista3y tendre todos los valores y.
+lista3x = NULL                               #en lista3y tendre todos los valores x.
 contador=2
 for(j in 1:N3){
   for(i in 1:dim3){
-    if((contador%%2) == 0){
-     lista33y = c(lista33y, lista3[[j]][i])
+    if((contador%%2) == 0){                   #Si es un elemento par...
+     lista3y = c(lista3y, lista3[[j]][i])     #Lo añado a lista3y
     }
-    else{
-     lista33x = c(lista33x, lista3[[j]][i])
+    else{                                     #Si es un elemento impar...
+     lista3x = c(lista3x, lista3[[j]][i])     #Lo añado a lista3x  
     }
      contador = contador+1
   }
 } 
-plot(lista33x, lista33y, 
-     main = "Valores función uniforme",col="purple")
+#Represento los datos
+plot(lista3x, lista3y, 
+     main = "4.2.3: Valores función uniforme",
+     col="purple")
 
 ###################################################
 ##################EJERCICIO 4.2.4##################
@@ -83,31 +87,32 @@ plot(lista33x, lista33y,
 N4=50
 dim4=2
 intervalo4 = 5:7
-lista4 = simula_gaus(N4,dim4,intervalo4)
+lista4 = simula_gaus(N4,dim4,intervalo4)         #Obtengo la lista de vectores de la funcion gaussiana
 
-#Creo un vector con los valores y (valores aleatorios generados).
-#Creo un vector con los valores x (indice de lista del valor).
-lista42y = NULL #en lista42y tendre todos los valores y.
-lista42x = NULL #en lista42y tendre todos los valores x.
+#Creo un vector con los valores y (valores aleatorios generados pares).
+#Creo un vector con los valores x (valores aleatorios generados impares).
+lista4y = NULL                                   #en lista4y tendre todos los valores y.
+lista4x = NULL                                   #en lista4x tendre todos los valores x.
 contador4=2
 for(j in 1:N4){
   for(i in 1:dim4){
-    if((contador4%%2) == 0){
-      lista42y = c(lista42y, lista4[[j]][i])
-    }else{
-      lista42x = c(lista42x, lista4[[j]][i])
+    if((contador4%%2) == 0){                     #Si es un elemento par...
+      lista4y = c(lista4y, lista4[[j]][i])       #Lo añado en lista4y
+    }else{                                       #Si es un elemento impar...
+      lista4x = c(lista4x, lista4[[j]][i])       #Lo añado en lista4x
     }
     contador4 = contador4 +1
   }
 } 
-plot(lista42x,lista42y, 
-     main = "Valores función gaussiana", col="orange")
+plot(lista4x,lista4y, 
+     main = "4.2.4: Valores función gaussiana",
+     col="purple")
 
 
 ###################################################
 ##################EJERCICIO 4.2.5##################
 ###################################################
-simula_recta <- function(intervalo=-50:50, a=NA){
+simula_recta <- function(intervalo=-50:50){
   #Tomo dos puntos aleatorios del cuadrado con un aleatorio
   primerx = sample(intervalo,1)
   primery = sample(intervalo,1)
