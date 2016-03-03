@@ -150,13 +150,13 @@ val = simula_recta(-50:50)
 a = val[1]
 b = val[2]
 
-#Genero los datos aleatorios uniformes y los represento junto a la recta
+#Genero los datos aleatorios uniformes y los represento junto a la recta anterior
 N6=50
 dim6=2
 intervalo6 = -50:50
 lista6 = simula_unif(N6,dim6,intervalo6)
 lista61y = NULL #en lista61y tendre todos los valores y.
-lista61x = NULL #en lista61y tendre todos los valores x.
+lista61x = NULL #en lista61x tendre todos los valores x.
 contador6 =2
 for(j in 1:N6){
   for(i in 1:dim6){
@@ -170,26 +170,19 @@ for(j in 1:N6){
   }
 }
 
-lista61xpos = NULL
-lista61ypos = NULL
-lista61xneg = NULL
-lista61yneg = NULL
-etiquetas6 = NULL
+#Etiqueto los datos mediante la función y las almaceno en etiquetas6
+etiquetas6 = NULL                                  #Será un vector con valores 1 y -1
 for(k in 1:length(lista61x)){
   num = lista61y[k] -a*lista61x[k] -b
-  if(num>0){
-    lista61xpos = c(lista61xpos, lista61x[k])
-    lista61ypos = c(lista61ypos, lista61y[k])
+  if(num>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
     etiquetas6 = c(etiquetas6, 1)
   }
-  if(num<0){
-    lista61xneg = c(lista61xneg, lista61x[k])
-    lista61yneg = c(lista61yneg, lista61y[k])
+  if(num<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
     etiquetas6 = c(etiquetas6, -1)
   }
 }
-points(lista61xpos,lista61ypos, col = "purple")
-points(lista61xneg,lista61yneg, col = "green")
 
 ###################################################
 ##################EJERCICIO 4.2.7##################
