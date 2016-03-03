@@ -215,12 +215,12 @@ points(x7, y71b, col="purple", type="l")
 #Dibujo los puntos del apartado 6 etiquetándolos de acuerdo a la segunda función
 for(k in 1:length(lista61x)){
   num1 = (lista61x[k] - 10)^2 + (lista61y[k] - 20)^2 -400
-  if(num1>0){                                       #valores positivos de la funcion--> etiqueta 1.
-    points(lista61x[k], lista61y[k],col= "orange")  #Los pinto en color naranja
+  if(num1>0){                                                 #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange")            #Los pinto en color naranja
     etiquetas71 = c(etiquetas71, 1)
   }
-  if(num1<0){                                       #valores negativos de la funcion-->etiqueta -1
-    points(lista61x[k], lista61y[k], col="green")   #Los pinto en color verde
+  if(num1<0){                                                 #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")             #Los pinto en color verde
     etiquetas71 = c(etiquetas71, -1)
   }
 }
@@ -297,6 +297,8 @@ for(k in 1:length(lista61x)){
 ###################################################
 #PARTE A
 auxiliar6 = etiquetas6
+#Obtengo el número de muestras positivas y negativas a cambiar 
+#Un 10% de todas las que hay de positivas y negativas. 
 numeropositivos8 =0
 for(i in 1:length(etiquetas6)) {
  if(etiquetas6[i] == 1)
@@ -304,35 +306,41 @@ for(i in 1:length(etiquetas6)) {
 }
 numeronegativos8 = length(etiquetas6) - numeropositivos8
 
-positivosacambiar8 = numeropositivos8%/%10
+#positivosacamiar8 muestras han de pasar de etiquetado 1 a -1
+positivosacambiar8 = numeropositivos8%/%10  
+#negativosacambiar8 muestras han de pasar de etiquetado -1 a 1
 negativosacambiar8 = numeronegativos8%/%10
 
 #Cambio positivos aleatorios a negativos.
 aleatorio6 = NULL
 for(j in 1:positivosacambiar8){
-  aleatorio6 = sample(1:length(etiquetas6),1)
-   while( etiquetas6[aleatorio6] != 1){
-     aleatorio6 = sample(1:length(etiquetas6),1)
+  aleatorio6 = sample(1:length(auxiliar6),1)
+   while( auxiliar6[aleatorio6] != 1){
+     aleatorio6 = sample(1:length(auxiliar6),1)
    }
-    etiquetas6[aleatorio6] = -1;
+    auxiliar6[aleatorio6] = -1;
 }
 
 #Cambio negativos aleatorios a positivos.
 aleatorio6b = NULL
 for(j in 1:negativosacambiar8){
-  aleatorio6b = sample(1:length(etiquetas6),1)
-  while( etiquetas6[aleatorio6b] != -1 && auxiliar6[aleatorio6b] == etiquetas6[aleatorio6b] ){
-    aleatorio6b = sample(1:length(etiquetas6),1)
+  aleatorio6b = sample(1:length(auxiliar6),1)
+  while( auxiliar6[aleatorio6b] != -1 && 
+         etiquetas6[aleatorio6b] == auxiliar6[aleatorio6b] ){
+    aleatorio6b = sample(1:length(auxiliar6),1)
   }
-  etiquetas6[aleatorio6b] = 1;
+  auxiliar6[aleatorio6b] = 1;
 }
 
-plot(lista61x, lista61y, col = "orange", main="Ejercicio 8")
+plot(lista61x, lista61y,
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     col = "orange", main="4.2.8:10% muestras modificadas")
 abline(b,a) # Recta ax+b (pendiente a)(corte b)
 #En etiquetas6 ya tengo la muestra con las etiquetas cambiadas
-for(i in 1:length(etiquetas6)){
-  if(etiquetas6[i] == 1){
-    points(lista61x[i], lista61y[i], col = "purple")
+for(i in 1:length(auxiliar6)){
+  if(auxiliar6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
@@ -340,44 +348,52 @@ for(i in 1:length(etiquetas6)){
 
 #PARTE B
 #con primera funcion:
-plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Primera")
-for(i in 1:length(etiquetas6)){
-  if(etiquetas6[i] == 1){
-    points(lista61x[i], lista61y[i], col = "purple")
+plot(x7,y71a, col = "purple",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     main = "4.2.8-b. Primera funcion", type="l")
+points(x7, y71b, col="purple", type="l")
+for(i in 1:length(auxiliar6)){
+  if(auxiliar6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
-points(x7, y71a, col="orange", type="l")
-points(x7, y71b, col="orange", type="l")
 
 #Con segunda funcion
-plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Segunda")
-for(i in 1:length(etiquetas6)){
-  if(etiquetas6[i] == 1){
-    points(lista61x[i], lista61y[i], col = "purple")
+plot(x7,y72a, col = "purple",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     main = "4.2.8-b. Segunda funcion", type="l")
+points(x7, y72b, col="purple", type="l")
+for(i in 1:length(auxiliar6)){
+  if(auxiliar6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
-points(x7, y72a, col="orange", type="l")
-points(x7, y72b, col="orange", type="l")
 
 #Con tercera funcion
-plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Tercera")
-for(i in 1:length(etiquetas6)){
-  if(etiquetas6[i] == 1){
-    points(lista61x[i], lista61y[i], col = "purple")
+plot(x7,y73a, col = "purple",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     main = "4.2.8-b. Tercera funcion", type="l")
+points(x7, y73b, col="purple", type="l")
+for(i in 1:length(auxiliar6)){
+  if(auxiliar6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
-points(x7, y73a, col="orange", type="l")
-points(x7, y73b, col="orange", type="l")
 
 #Con cuarta funcion
-plot(lista61x, lista61y, col = "orange", main="Ejercicio 8-b. Cuarta")
-for(i in 1:length(etiquetas6)){
-  if(etiquetas6[i] == 1){
-    points(lista61x[i], lista61y[i], col = "purple")
+plot(x7,y74, col = "purple",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
+     main = "4.2.8-b. Cuarta funcion", type="l")
+for(i in 1:length(auxiliar6)){
+  if(auxiliar6[i] == 1){
+    points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
-points(x7, y74, col="orange", type="l")
