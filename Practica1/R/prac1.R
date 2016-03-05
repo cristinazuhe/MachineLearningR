@@ -1,4 +1,6 @@
-
+########################################################################
+############################### SECCION 1 ##############################
+########################################################################
 ###################################################
 ##################EJERCICIO 4.2.1##################
 ###################################################
@@ -397,3 +399,48 @@ for(i in 1:length(auxiliar6)){
   }else
     points(lista61x[i], lista61y[i], col = "green")
 }
+########################################################################
+############################### SECCION 2 ##############################
+########################################################################
+###################################################
+##################EJERCICIO 4.3.1##################
+###################################################
+PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
+  #Dibujo los datos etiquetados
+  plot(datos[1,1], datos[1,2], main="4.3.5: Ajuste PLA",
+       xlim = c(intervalos3p1[1], intervalos3p1[length(intervalos3p1)]), 
+       ylim = c(intervalos3p1[1], intervalos3p1[length(intervalos3p1)]),)
+  for(i in 1:length(label)){
+    if(label[i] == 1)
+      points(datos[i,1], datos[i,2], col="orange")
+    else
+      points(datos[i,1], datos[i,2], col="green")
+  }
+  vini = c(vini, 1)
+  d = dim(datos)
+  datos = cbind(datos, rep(1,d[1]))
+  contador = 0
+  
+  while(contador<max_iter){
+    H = sign(datos%*%vini)
+    indexa = which(H!=label) #Guarda los indices de los que son distintos
+    if(length(indexa)==0){
+      break
+    }else{
+      i = sample(indexa, 1)
+      vini = vini + datos[i,]*label[i]
+    }
+    contador= contador+1
+  }
+  print("Numero de iteracción en la que para: ")
+  print(contador)
+  print("Vector de parada:")
+  vini
+}
+print("****************Seccion 2********************")
+matriz_datos = cbind(lista61x, lista61y) #creo la matriz de datos
+mi_label = etiquetas6
+d = dim(matriz_datos)
+vector_inicial = rep(0,d[2])
+max_itera = 100
+print(PLA(matriz_datos,mi_label, max_itera, vector_inicial, intervalo6))
