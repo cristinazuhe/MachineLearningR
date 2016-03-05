@@ -432,6 +432,7 @@ PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
     }
     contador= contador+1
   }
+  abline(-vini[3]/vini[2], -vini[1]/vini[2])
   print("Numero de iteracción en la que para: ")
   print(contador)
   print("Vector de parada:")
@@ -442,5 +443,5 @@ matriz_datos = cbind(lista61x, lista61y) #creo la matriz de datos
 mi_label = etiquetas6
 d = dim(matriz_datos)
 vector_inicial = rep(0,d[2])
-max_itera = 100
+max_itera = 10
 print(PLA(matriz_datos,mi_label, max_itera, vector_inicial, intervalo6))
