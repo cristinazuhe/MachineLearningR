@@ -298,7 +298,7 @@ for(k in 1:length(lista61x)){
 ##################EJERCICIO 4.2.8##################
 ###################################################
 #PARTE A
-auxiliar6 = etiquetas6
+etiquetas8 = etiquetas6
 #Obtengo el número de muestras positivas y negativas a cambiar 
 #Un 10% de todas las que hay de positivas y negativas. 
 numeropositivos8 =0
@@ -316,22 +316,22 @@ negativosacambiar8 = numeronegativos8%/%10
 #Cambio positivos aleatorios a negativos.
 aleatorio6 = NULL
 for(j in 1:positivosacambiar8){
-  aleatorio6 = sample(1:length(auxiliar6),1)
-   while( auxiliar6[aleatorio6] != 1){
-     aleatorio6 = sample(1:length(auxiliar6),1)
+  aleatorio6 = sample(1:length(etiquetas8),1)
+   while( etiquetas8[aleatorio6] != 1){
+     aleatorio6 = sample(1:length(etiquetas8),1)
    }
-    auxiliar6[aleatorio6] = -1;
+  etiquetas8[aleatorio6] = -1;
 }
 
 #Cambio negativos aleatorios a positivos.
 aleatorio6b = NULL
 for(j in 1:negativosacambiar8){
-  aleatorio6b = sample(1:length(auxiliar6),1)
-  while( auxiliar6[aleatorio6b] != -1 && 
-         etiquetas6[aleatorio6b] == auxiliar6[aleatorio6b] ){
-    aleatorio6b = sample(1:length(auxiliar6),1)
+  aleatorio6b = sample(1:length(etiquetas8),1)
+  while( etiquetas8[aleatorio6b] != -1 && 
+         etiquetas6[aleatorio6b] == etiquetas8[aleatorio6b] ){
+    aleatorio6b = sample(1:length(etiquetas8),1)
   }
-  auxiliar6[aleatorio6b] = 1;
+  etiquetas8[aleatorio6b] = 1;
 }
 
 plot(lista61x, lista61y,
@@ -339,9 +339,9 @@ plot(lista61x, lista61y,
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      col = "orange", main="4.2.8:10% muestras modificadas")
 abline(b,a) # Recta ax+b (pendiente a)(corte b)
-#En etiquetas6 ya tengo la muestra con las etiquetas cambiadas
-for(i in 1:length(auxiliar6)){
-  if(auxiliar6[i] == 1){
+#En etiquetas8 ya tengo la muestra con las etiquetas cambiadas
+for(i in 1:length(etiquetas8)){
+  if(etiquetas8[i] == 1){
     points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
@@ -355,8 +355,8 @@ plot(x7,y71a, col = "purple",
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "4.2.8-b. Primera funcion", type="l")
 points(x7, y71b, col="purple", type="l")
-for(i in 1:length(auxiliar6)){
-  if(auxiliar6[i] == 1){
+for(i in 1:length(etiquetas8)){
+  if(etiquetas8[i] == 1){
     points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
@@ -368,8 +368,8 @@ plot(x7,y72a, col = "purple",
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "4.2.8-b. Segunda funcion", type="l")
 points(x7, y72b, col="purple", type="l")
-for(i in 1:length(auxiliar6)){
-  if(auxiliar6[i] == 1){
+for(i in 1:length(etiquetas8)){
+  if(etiquetas8[i] == 1){
     points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
@@ -381,8 +381,8 @@ plot(x7,y73a, col = "purple",
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "4.2.8-b. Tercera funcion", type="l")
 points(x7, y73b, col="purple", type="l")
-for(i in 1:length(auxiliar6)){
-  if(auxiliar6[i] == 1){
+for(i in 1:length(etiquetas8)){
+  if(etiquetas8[i] == 1){
     points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
@@ -393,8 +393,8 @@ plot(x7,y74, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
      main = "4.2.8-b. Cuarta funcion", type="l")
-for(i in 1:length(auxiliar6)){
-  if(auxiliar6[i] == 1){
+for(i in 1:length(etiquetas8)){
+  if(etiquetas8[i] == 1){
     points(lista61x[i], lista61y[i], col = "orange")
   }else
     points(lista61x[i], lista61y[i], col = "green")
@@ -405,6 +405,85 @@ for(i in 1:length(auxiliar6)){
 ###################################################
 ##################EJERCICIO 4.3.1##################
 ###################################################
+ajusta_PLA <- function(datos, label, max_iter=10, vini){
+  vini = c(vini, 1)
+  d = dim(datos)
+  datos = cbind(datos, rep(1,d[1]))
+  contador = 0
+  
+  while(contador<max_iter){
+    H = sign(datos%*%vini)
+    indexa = which(H!=label) #Guarda los indices de los que son distintos
+    if(length(indexa)==0){
+      print("Se ha encontrado un buen ajuste.")
+      break
+    }else{
+      i = sample(indexa, 1)
+      vini = vini + datos[i,]*label[i]
+    }
+    contador= contador+1
+  }
+  if(contador==max_iter)
+    print("No se ha encontrado un buen ajuste.")
+  print("Numero de iteracción en la que para: ")
+  print(contador)
+  return(vini)
+}
+
+
+###################################################
+##################EJERCICIO 4.3.2##################
+###################################################
+print("********************************Ejercicio 4.3.2************************************")
+matriz_datoss2e2 = cbind(lista61x, lista61y) #creo la matriz de datos
+mi_labels2e2 = etiquetas6
+max_itera100 = 100
+d = dim(matriz_datos)
+
+vector_inicial0 = rep(0,d[2])
+writeLines("\n***Ajuste PLA con vector inicial 0:***")
+print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera, vector_inicial))
+
+for(i in 1:10){
+writeLines("\n***Ajuste PLA con vector aleatorio:***")
+    vector_inicial_random = runif(d[2],0,1)
+    print(vector_inicial_random)
+    print(ajusta_PLA(matriz_datoss2e1,mi_labels2e1, max_itera, vector_inicial_random))
+}
+
+###################################################
+##################EJERCICIO 4.3.3##################
+###################################################
+print("********************************Ejercicio 4.3.3************************************")
+max_iter10 = 10
+max_iter1000 = 1000
+matriz_datoss2e3 = cbind(lista61x, lista61y) #creo la matriz de datos
+mi_labels2e3 = etiquetas8
+
+d = dim(matriz_datoss2e3)
+
+vector_inicial0 = rep(0,d[2])
+writeLines("\n***Ajuste PLA con vector inicial 0:***")
+hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,mi_labels2e3, max_iter10, vector_inicial)
+print(hiperplanos3e3i10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
   #Dibujo los datos etiquetados
   plot(datos[1,1], datos[1,2], main="4.3.5: Ajuste PLA",
@@ -425,23 +504,21 @@ PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
     H = sign(datos%*%vini)
     indexa = which(H!=label) #Guarda los indices de los que son distintos
     if(length(indexa)==0){
+      print("Se ha encontrado un buen ajuste.")
       break
     }else{
       i = sample(indexa, 1)
       vini = vini + datos[i,]*label[i]
+      abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
+      
     }
     contador= contador+1
   }
-  abline(-vini[3]/vini[2], -vini[1]/vini[2])
+  if(contador==max_iter)
+    print("No se ha encontrado un buen ajuste.")
+  abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle3")
   print("Numero de iteracción en la que para: ")
   print(contador)
   print("Vector de parada:")
   vini
 }
-print("****************Seccion 2********************")
-matriz_datos = cbind(lista61x, lista61y) #creo la matriz de datos
-mi_label = etiquetas6
-d = dim(matriz_datos)
-vector_inicial = rep(0,d[2])
-max_itera = 10
-print(PLA(matriz_datos,mi_label, max_itera, vector_inicial, intervalo6))
