@@ -438,17 +438,17 @@ print("********************************Ejercicio 4.3.2**************************
 matriz_datoss2e2 = cbind(lista61x, lista61y) #creo la matriz de datos
 mi_labels2e2 = etiquetas6
 max_itera100 = 100
-d = dim(matriz_datos)
+d = dim(matriz_datoss2e2)
 
 vector_inicial0 = rep(0,d[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera, vector_inicial))
+print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial0))
 
 for(i in 1:10){
 writeLines("\n***Ajuste PLA con vector aleatorio:***")
     vector_inicial_random = runif(d[2],0,1)
     print(vector_inicial_random)
-    print(ajusta_PLA(matriz_datoss2e1,mi_labels2e1, max_itera, vector_inicial_random))
+    print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial_random))
 }
 
 ###################################################
@@ -464,7 +464,7 @@ d = dim(matriz_datoss2e3)
 
 vector_inicial0 = rep(0,d[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,mi_labels2e3, max_iter10, vector_inicial)
+hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,mi_labels2e3, max_iter10, vector_inicial0)
 print(hiperplanos3e3i10)
 
 
