@@ -448,7 +448,7 @@ for(i in 1:10){
 writeLines("\n***Ajuste PLA con vector aleatorio:***")
     vector_inicial_random = runif(d[2],0,1)
     print(vector_inicial_random)
-    print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial_random))
+    ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial_random)
 }
 
 ###################################################
@@ -458,25 +458,55 @@ print("********************************Ejercicio 4.3.3**************************
 max_iter10 = 10
 max_iter1000 = 1000
 matriz_datoss2e3 = cbind(lista61x, lista61y) #creo la matriz de datos
-mi_labels2e3 = etiquetas8
-
+etiquetasorigs2e3 = etiquetas8
+intervalors2e3 = intervalo6
 d = dim(matriz_datoss2e3)
 
+
+#Representamos las muestras con las etiquetas originales
+plot(NULL,NULL, col= "red", 
+     xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
+     ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
+     main="4.3.3.Etiquetas antes de PLA ") 
+for(k in 1:length(matriz_datoss2e3[,1])){
+  if(etiquetasorigs2e3[k] == 1)
+    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "orange")
+  else
+    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "green")
+}
+
+#Realizo PLA
 vector_inicial0 = rep(0,d[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,mi_labels2e3, max_iter10, vector_inicial0)
-print(hiperplanos3e3i10)
+hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,etiquetasorigs2e3, max_iter10, vector_inicial0)
+coefas2e3 = -hiperplanos3e3i10[3]/hiperplanos3e3i10[2]
+coefbs2e3 = -hiperplanos3e3i10[1]/hiperplanos3e3i10[2]
 
+#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
+plot(NULL,NULL, col= "red", 
+     xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
+     ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
+     main="4.3.3.Etiquetas tras PLA ") 
+abline(coefbs2e3,coefas2e3) # Recta ax+b (pendiente a)(corte b)
 
+etiquetass2e3 = NULL                                  #Será un vector con valores 1 y -1
+for(k in 1:length(matriz_datoss2e3[,1])){
+  numi = matriz_datoss2e3[k,2] -coefas2e3*matriz_datoss2e3[k,1] -coefbs2e3
+  if(numi>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "orange") #Los pinto en color naranja
+    etiquetass2e3 = c(etiquetass2e3, 1)
+  }
+  if(numi<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2], col="green")  #Los pinto en color verde
+    etiquetass2e3 = c(etiquetass2e3, -1)
+  }
+}
 
-
-
-
-
-
-
-
-
+#Obtengo etiquetas cambiadas por PLA
+etiquetas_cambiadas = which(etiquetasorigs2e3!=etiquetass2e3) 
+num_etiquetas_cambiadas = length(etiquetas_cambiadas)
+print("Número de etiquetas cambiadas: ")
+print(num_etiquetas_cambiadas)
 
 
 
