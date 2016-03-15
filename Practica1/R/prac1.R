@@ -61,22 +61,13 @@ dim3=2
 intervalo3 = -50:50
 lista3 = simula_unif(N3,dim3,intervalo3)      #Obtengo la lista de vectores de la funcion
 
-#Creo un vector con los valores y (valores aleatorios generados pares).
-#Creo un vector con los valores x (valores aleatorios generados impares).
-lista3y = NULL                               #en lista3y tendre todos los valores y.
-lista3x = NULL                               #en lista3y tendre todos los valores x.
-contador=2
-for(j in 1:N3){
-  for(i in 1:dim3){
-    if((contador%%2) == 0){                   #Si es un elemento par...
-     lista3y = c(lista3y, lista3[[j]][i])     #Lo añado a lista3y
-    }
-    else{                                     #Si es un elemento impar...
-     lista3x = c(lista3x, lista3[[j]][i])     #Lo añado a lista3x  
-    }
-     contador = contador+1
-  }
-} 
+lista3x=NULL
+lista3y=NULL
+for(k in 1:N3){
+  lista3x = c(lista3x,lista3[[k]][1])                    #en lista3x tendre todos los valores x.(primeros)
+  lista3y = c(lista3y,lista3[[k]][2])                    #en lista3y tendre todos los valores y.(segundos)
+}
+
 #Represento los datos
 plot(lista3x, lista3y, 
      main = "4.2.3: Valores función uniforme",
@@ -93,19 +84,13 @@ lista4 = simula_gaus(N4,dim4,intervalo4)         #Obtengo la lista de vectores d
 
 #Creo un vector con los valores y (valores aleatorios generados pares).
 #Creo un vector con los valores x (valores aleatorios generados impares).
-lista4y = NULL                                   #en lista4y tendre todos los valores y.
-lista4x = NULL                                   #en lista4x tendre todos los valores x.
-contador4=2
-for(j in 1:N4){
-  for(i in 1:dim4){
-    if((contador4%%2) == 0){                     #Si es un elemento par...
-      lista4y = c(lista4y, lista4[[j]][i])       #Lo añado en lista4y
-    }else{                                       #Si es un elemento impar...
-      lista4x = c(lista4x, lista4[[j]][i])       #Lo añado en lista4x
-    }
-    contador4 = contador4 +1
-  }
-} 
+lista4x = NULL
+lista4y= NULL
+for(k in 1:N4){
+    lista4x = c(lista4x,lista4[[k]][1])          
+    lista4y = c(lista4y,lista4[[k]][2])                                 
+}
+
 plot(lista4x,lista4y, 
      main = "4.2.4: Valores función gaussiana",
      col="purple")
@@ -157,19 +142,12 @@ N6=50
 dim6=2
 intervalo6 = -50:50
 lista6 = simula_unif(N6,dim6,intervalo6)
-lista61y = NULL #en lista61y tendre todos los valores y.
-lista61x = NULL #en lista61x tendre todos los valores x.
-contador6 =2
-for(j in 1:N6){
-  for(i in 1:dim6){
-    if((contador6%%2) == 0){
-      lista61y = c(lista61y, lista6[[j]][i])
-    }
-    else{
-      lista61x = c(lista61x, lista6[[j]][i])
-    }
-    contador6 = contador6+1
-  }
+
+lista61x=NULL
+lista61y=NULL
+for(k in 1:N6){
+    lista61x = c(lista61x,lista6[[k]][1]) #en lista61y tendre todos los valores y.
+    lista61y = c(lista61y,lista6[[k]][2]) #en lista61x tendre todos los valores x.
 }
 
 #Etiqueto los datos mediante la función y las almaceno en etiquetas6
@@ -509,7 +487,59 @@ print("Número de etiquetas cambiadas: ")
 print(num_etiquetas_cambiadas)
 
 
+###################################################
+##################EJERCICIO 4.3.4##################
+###################################################
+print("********************************Ejercicio 4.3.4************************************")
+matriz_datoss2e4 = cbind(lista61x, lista61y) #creo la matriz de datos
+etiquetasorigs2e4 = etiquetas71
+intervalors2e4 = intervalo6
+ds2e4 = dim(matriz_datoss2e4)
 
+#Representamos las muestras con las etiquetas originales
+plot(NULL,NULL, col= "red", 
+     xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
+     ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
+     main="4.3.4:Etiquetas antes de PLA. Datos de funcion1 de 4.2.7 ") 
+for(k in 1:length(matriz_datoss2e4[,1])){
+  if(etiquetasorigs2e4[k] == 1)
+    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "orange")
+  else
+    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "green")
+}
+
+#Realizo PLA
+vector_inicial0s2e4 = rep(0,ds2e4[2])
+writeLines("\n***Ajuste PLA con vector inicial 0:***")
+hiperplanos2e4i10 = ajusta_PLA(matriz_datoss2e4,etiquetasorigs2e4, max_iter10, vector_inicial0s2e4)
+coefas2e4 = -hiperplanos2e4i10[3]/hiperplanos2e4i10[2]
+coefbs2e4 = -hiperplanos2e4i10[1]/hiperplanos2e4i10[2]
+
+#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
+plot(NULL,NULL, col= "red", 
+     xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
+     ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
+     main="4.3.4.Etiquetas tras PLA ") 
+abline(coefbs2e4,coefas2e4) # Recta ax+b (pendiente a)(corte b)
+
+etiquetass2e4 = NULL                                  #Será un vector con valores 1 y -1
+for(k in 1:length(matriz_datoss2e4[,1])){
+  numi = matriz_datoss2e4[k,2] -coefas2e4*matriz_datoss2e4[k,1] -coefbs2e4
+  if(numi>0){                                       #valores positivos de la funcion--> etiqueta 1.
+    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "orange") #Los pinto en color naranja
+    etiquetass2e4 = c(etiquetass2e4, 1)
+  }
+  if(numi<0){                                       #valores negativos de la funcion-->etiqueta -1
+    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2], col="green")  #Los pinto en color verde
+    etiquetass2e4 = c(etiquetass2e4, -1)
+  }
+}
+
+#Obtengo etiquetas cambiadas por PLA
+etiquetas_cambiadass2e4 = which(etiquetasorigs2e4!=etiquetass2e4) 
+num_etiquetas_cambiadass2e4 = length(etiquetas_cambiadass2e4)
+print("Número de etiquetas cambiadas: ")
+print(num_etiquetas_cambiadass2e4)
 
 
 
