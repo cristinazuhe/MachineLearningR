@@ -398,7 +398,6 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
     }else{
       i = sample(indexa, 1)
       vini = vini + datos[i,]*label[i]
-      print(length(indexa))
     }
     contador= contador+1
   }
@@ -406,11 +405,6 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
     print("No se ha encontrado un buen ajuste.")
   print("Numero de iteracción en la que para: ")
   print(contador)
-  print("Numero de errores")
-  
-  H = sign(datos%*%vini)
-  indexa = which(H!=label) #Guarda los indices de los que son distintos
-  print(length(indexa))
   return(vini)
 }
 
@@ -600,7 +594,7 @@ ds2e5 = dim(matriz_datoss2e5)
 
 vector_inicial0s2e5 = rep(0,ds2e5[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, 10,
+print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, max_itera100,
                   vector_inicial0s2e5, intervalors2e3))
 
 
