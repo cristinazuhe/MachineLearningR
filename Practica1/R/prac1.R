@@ -388,7 +388,7 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
   d = dim(datos)
   datos = cbind(datos, rep(1,d[1]))
   contador = 0
-  
+  numerocambiadas=NULL
   while(contador<max_iter){
     H = sign(datos%*%vini)
     indexa = which(H!=label) #Guarda los indices de los que son distintos
@@ -398,6 +398,7 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
     }else{
       i = sample(indexa, 1)
       vini = vini + datos[i,]*label[i]
+      print(length(indexa))
     }
     contador= contador+1
   }
@@ -405,6 +406,11 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
     print("No se ha encontrado un buen ajuste.")
   print("Numero de iteracción en la que para: ")
   print(contador)
+  print("Numero de errores")
+  
+  H = sign(datos%*%vini)
+  indexa = which(H!=label) #Guarda los indices de los que son distintos
+  print(length(indexa))
   return(vini)
 }
 
@@ -542,13 +548,14 @@ print("Número de etiquetas cambiadas: ")
 print(num_etiquetas_cambiadass2e4)
 
 
-
-
-PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
+###################################################
+##################EJERCICIO 4.3.5##################
+###################################################
+PLA_grafica <- function(datos, label, max_iter=10, vini, intervalo){
   #Dibujo los datos etiquetados
   plot(datos[1,1], datos[1,2], main="4.3.5: Ajuste PLA",
-       xlim = c(intervalos3p1[1], intervalos3p1[length(intervalos3p1)]), 
-       ylim = c(intervalos3p1[1], intervalos3p1[length(intervalos3p1)]),)
+       xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+       ylim = c(intervalo[1], intervalo[length(intervalo)]),)
   for(i in 1:length(label)){
     if(label[i] == 1)
       points(datos[i,1], datos[i,2], col="orange")
@@ -569,16 +576,93 @@ PLA <- function(datos, label, max_iter=10, vini, intervalos3p1){
     }else{
       i = sample(indexa, 1)
       vini = vini + datos[i,]*label[i]
-      abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
-      
+      #abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
+    }
+    contador= contador+1
+  }
+  if(contador==max_iter)
+    print("No se ha encontrado un buen ajuste.") 
+  
+  H = sign(datos%*%vini)
+  indexa = which(H!=label) #Guarda los indices de los que son distintos
+  print("Numero de errores:")
+  print(length(indexa))
+  
+  abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle3")
+  print("Vector de parada:")
+  vini
+}
+
+print("********************************Ejercicio 4.3.5************************************")
+matriz_datoss2e5 = matriz_datoss2e3 #creo la matriz de datos
+mi_labels2e5 = etiquetasorigs2e3
+ds2e5 = dim(matriz_datoss2e5)
+
+vector_inicial0s2e5 = rep(0,ds2e5[2])
+writeLines("\n***Ajuste PLA con vector inicial 0:***")
+print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, 10,
+                  vector_inicial0s2e5, intervalors2e3))
+
+
+###################################################
+##################EJERCICIO 4.3.6##################
+###################################################
+PLA_grafica_MOD <- function(datos, label, max_iter=10, vini, intervalo){
+  #Dibujo los datos etiquetados
+  plot(datos[1,1], datos[1,2], main="4.3.6: Ajuste PLA",
+       xlim = c(intervalo[1], intervalo[length(intervalo)]), 
+       ylim = c(intervalo[1], intervalo[length(intervalo)]),)
+  for(i in 1:length(label)){
+    if(label[i] == 1)
+      points(datos[i,1], datos[i,2], col="orange")
+    else
+      points(datos[i,1], datos[i,2], col="green")
+  }
+  vini = c(vini, 1)
+  d = dim(datos)
+  datos = cbind(datos, rep(1,d[1]))
+  contador = 0
+  mejorvini=NULL
+  mejorbuenas=length(label)
+  indexa=NULL
+  while(contador<max_iter){
+    H = sign(datos%*%vini)
+    indexa = which(H!=label) #Guarda los indices de los que son distintos
+    if(length(indexa)==0){
+      print("Se ha encontrado un buen ajuste.")
+      break
+    }else{
+      i = sample(indexa, 1)
+      vini = vini + datos[i,]*label[i]
+      if(length(which(sign(datos%*%vini)!=label))<mejorbuenas){
+        H = sign(datos%*%vini)
+        indexa = which(H!=label) #Guarda los indices de los que son distintos
+        mejorvini=vini
+        mejorbuenas=length(indexa)
+      }
+      #abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
+
     }
     contador= contador+1
   }
   if(contador==max_iter)
     print("No se ha encontrado un buen ajuste.")
-  abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle3")
-  print("Numero de iteracción en la que para: ")
-  print(contador)
+
+  print("Numero de errores:")
+  print(mejorbuenas)
+  
+  abline(-mejorvini[3]/mejorvini[2], -mejorvini[1]/mejorvini[2], col="thistle3")
   print("Vector de parada:")
-  vini
+  mejorvini
 }
+
+
+print("********************************Ejercicio 4.3.6************************************")
+matriz_datoss2e6 = matriz_datoss2e3 #creo la matriz de datos
+mi_labels2e6 = mi_labels2e5
+ds2e6 = dim(matriz_datoss2e6)
+
+vector_inicial0s2e6 = rep(0,ds2e6[2])
+writeLines("\n***Ajuste PLA con vector inicial 0:***")
+print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
+                  vector_inicial0s2e6, intervalors2e3))
