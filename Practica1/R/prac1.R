@@ -660,3 +660,18 @@ vector_inicial0s2e6 = rep(0,ds2e6[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
 print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
                   vector_inicial0s2e6, intervalors2e3))
+########################################################################
+############################### SECCION 3 ##############################
+########################################################################
+###################################################
+##################EJERCICIO 4.4.1##################
+###################################################
+print("********************************Ejercicio 4.4.1*********************************")
+#Leo el fichero
+lectura_fichero <- read.table("zip.train", header=FALSE)
+
+#indices de los vectores de datos que representan 1 o 5
+indicess3e1= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
+
+matrizdatoslista=matrix(lectura_fichero[indicess3e1[1],2:ncol(lectura_fichero)],nrow=16,ncol=16, byrow=F)
+matrizdatos= c(matrizdatoslista)
