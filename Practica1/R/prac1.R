@@ -664,14 +664,26 @@ print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
 ############################### SECCION 3 ##############################
 ########################################################################
 ###################################################
-##################EJERCICIO 4.4.1##################
+##################EJERCICIO 4.4.2##################
 ###################################################
-print("********************************Ejercicio 4.4.1*********************************")
+print("********************************Ejercicio 4.4.2*********************************")
 #Leo el fichero
 lectura_fichero <- read.table("zip.train", header=FALSE)
 
-#indices de los vectores de datos que representan 1 o 5
-indicess3e1= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
+#indices de los vectores de datos que representan 1's o 5's
+indicess3e2= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
 
-matrizdatoslista=matrix(lectura_fichero[indicess3e1[1],2:ncol(lectura_fichero)],nrow=16,ncol=16, byrow=F)
-matrizdatos= c(matrizdatoslista)
+#matrizdatostodos es una lista con las matrices que representan las imagenes de 1's y 5's
+matrizdatostodos = NULL
+for(k in 1:length(indicess3e2)){
+    matrizdatos=matrix(as.numeric(lectura_fichero[indicess3e2[k],2:ncol(lectura_fichero)]), nrow=16,ncol=16)
+    matrizdatosderecha=NULL
+    for(i in nrow(matrizdatos):1){
+      matrizdatosderecha = cbind(matrizdatosderecha, matrizdatos[,i])
+    }
+    matrizdatostodos = c(matrizdatostodos, list(matrizdatosderecha))
+}
+image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
+
+
+
