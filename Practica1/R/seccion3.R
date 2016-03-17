@@ -47,3 +47,16 @@ for(k in 1:length(indicess3e2)){
    }
    vectorsimetrias = c(vectorsimetrias, sumadifabs)
 }
+
+###################################################
+##################EJERCICIO 4.4.4##################
+###################################################
+plot(vectormedias, vectorsimetrias, main="4.4.3. Representacion 1's y 5's", col="blue")
+for(k in 1:length(indicess3e2)){
+   if(lectura_fichero[indicess3e2,1][k] == 5)
+   points(vectormedias[k], vectorsimetrias[k], col="red")
+}
+
+###################################################
+##################EJERCICIO 4.4.5##################
+###################################################
