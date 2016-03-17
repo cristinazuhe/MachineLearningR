@@ -663,10 +663,10 @@ print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
 ########################################################################
 ############################### SECCION 3 ##############################
 ########################################################################
+
 ###################################################
 ##################EJERCICIO 4.4.2##################
 ###################################################
-print("********************************Ejercicio 4.4.2*********************************")
 #Leo el fichero
 lectura_fichero <- read.table("zip.train", header=FALSE)
 
@@ -683,7 +683,17 @@ for(k in 1:length(indicess3e2)){
     }
     matrizdatostodos = c(matrizdatostodos, list(matrizdatosderecha))
 }
-image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
+#image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
 
+###################################################
+##################EJERCICIO 4.4.3##################
+###################################################
+print("********************************Ejercicio 4.4.3*********************************")
+#Vector con el valor medio para cada matriz
+vectormedias = NULL
+for(k in 1:length(indicess3e2)){
+   vectormedias = c(vectormedias, mean(apply(matrizdatostodos[[k]],1, mean)))
+}
 
-
+#Vector con grado de simetria vertical para cada matriz
+print(matrizdatostodos[[1]])
