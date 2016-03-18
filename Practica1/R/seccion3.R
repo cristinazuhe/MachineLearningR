@@ -64,11 +64,10 @@ regresion <- function(MatrizDatos, Etiquetas){
   sv = svd(MatrizDatos)
   U = sv$u
   D = diag(sv$d)
-  Vtra = sv$v
-  V = t(Vtra)
+  V = sv$v
   
   Dcruz = solve(t(D)%*%D)%*%t(D)
-  XtraX_inv = V%*%Dcruz%*%Vtra
+  XtraX_inv = V%*%Dcruz%*%t(V)
   Xcruz = XtraX_inv%*%t(MatrizDatos)
   
   #Obtengo w:
@@ -81,6 +80,7 @@ regresion <- function(MatrizDatos, Etiquetas){
   print(w)
   abline(w[2,], w[1,])
 }
+
 matrizdatoss3e5 = cbind(vectormedias, vectorsimetrias)
 etiquetass3e5 = lectura_fichero[indicess3e2,1]
 regresion(matrizdatoss3e5, etiquetass3e5)
