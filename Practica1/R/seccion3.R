@@ -41,8 +41,8 @@ vectorsimetrias =NULL
 for(k in 1:length(indicess3e2)){
    sumadifabs = 0
    for(i in 1: mitad){
-      vectorderecho = matrizdatostodos[[k]][i,]
-      vectorizquierdo=matrizdatostodos[[k]][total - i+1,]
+      vectorderecho = matrizdatostodos[[k]][,i]
+      vectorizquierdo=matrizdatostodos[[k]][,total - i+1]
       sumadifabs = sumadifabs + 2*(sum(abs(vectorderecho - vectorizquierdo))) #Multiplico por 2 porque me piden que recorra toda la imagen
    }
    vectorsimetrias = c(vectorsimetrias, sumadifabs)
@@ -51,7 +51,7 @@ for(k in 1:length(indicess3e2)){
 ###################################################
 ##################EJERCICIO 4.4.4##################
 ###################################################
-plot(vectormedias, vectorsimetrias, main="4.4.3. Representacion 1's y 5's", col="blue")
+plot(vectormedias, vectorsimetrias, main="4.4.4. Representacion 1's y 5's", col="blue")
 for(k in 1:length(indicess3e2)){
    if(lectura_fichero[indicess3e2,1][k] == 5)
    points(vectormedias[k], vectorsimetrias[k], col="red")
@@ -60,3 +60,27 @@ for(k in 1:length(indicess3e2)){
 ###################################################
 ##################EJERCICIO 4.4.5##################
 ###################################################
+regresion <- function(MatrizDatos, Etiquetas){
+  sv = svd(MatrizDatos)
+  U = sv$u
+  D = diag(sv$d)
+  Vtra = sv$v
+  V = t(Vtra)
+  
+  Dcruz = solve(t(D)%*%D)%*%t(D)
+  XtraX_inv = V%*%Dcruz%*%Vtra
+  Xcruz = XtraX_inv%*%t(MatrizDatos)
+  
+  #Obtengo w:
+  w = Xcruz%*%Etiquetas
+  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", col="blue")
+  for(k in 1:length(Etiquetas)){
+    if(Etiquetas[k] == 5)
+      points(MatrizDatos[k,1], MatrizDatos[k,2], col="red")
+  }
+  print(w)
+  abline(w[2,], w[1,])
+}
+matrizdatoss3e5 = cbind(vectormedias, vectorsimetrias)
+etiquetass3e5 = lectura_fichero[indicess3e2,1]
+regresion(matrizdatoss3e5, etiquetass3e5)
