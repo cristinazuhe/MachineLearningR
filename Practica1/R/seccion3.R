@@ -61,11 +61,8 @@ for(k in 1:length(indicess3e2)){
 ##################EJERCICIO 4.4.5##################
 ###################################################
 regresion <- function(MatrizDatos, Etiquetas){
-  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", col="blue")
-  for(k in 1:length(Etiquetas)){
-    if(Etiquetas[k] == 5)
-      points(MatrizDatos[k,1], MatrizDatos[k,2], col="red")
-  }
+  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", col=(Etiquetas-1)/2 +2)
+  
   d = dim(MatrizDatos)
  # MatrizDatos = cbind(MatrizDatos, rep(1,d[1]))
   
