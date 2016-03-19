@@ -61,26 +61,30 @@ for(k in 1:length(indicess3e2)){
 ##################EJERCICIO 4.4.5##################
 ###################################################
 regresion <- function(MatrizDatos, Etiquetas){
-  sv = svd(MatrizDatos)
-  U = sv$u
-  D = diag(sv$d)
-  V = sv$v
-  
-  Dcruz = solve(t(D)%*%D)%*%t(D)
-  XtraX_inv = V%*%Dcruz%*%t(V)
-  Xcruz = XtraX_inv%*%t(MatrizDatos)
-  
-  #Obtengo w:
-  w = Xcruz%*%Etiquetas
   plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", col="blue")
   for(k in 1:length(Etiquetas)){
     if(Etiquetas[k] == 5)
       points(MatrizDatos[k,1], MatrizDatos[k,2], col="red")
   }
+  d = dim(MatrizDatos)
+ # MatrizDatos = cbind(MatrizDatos, rep(1,d[1]))
+  
+  sv = svd(MatrizDatos)
+  U = sv$u
+  D = diag(sv$d)
+  V = sv$v
+  
+  Dcruz = solve(t(D)%*%D)%*%t(D) #pseudoinversa bien hecha
+  XtraX_inv = V%*%Dcruz%*%t(V)
+  Xcruz = XtraX_inv%*%t(MatrizDatos)
+  
+  #Obtengo w:
+  w = Xcruz%*%Etiquetas
   print(w)
-  abline(w[2,], w[1,])
+  abline(w[2,], w[1,], col="thistle3")
 }
 
 matrizdatoss3e5 = cbind(vectormedias, vectorsimetrias)
 etiquetass3e5 = lectura_fichero[indicess3e2,1]
 regresion(matrizdatoss3e5, etiquetass3e5)
+
