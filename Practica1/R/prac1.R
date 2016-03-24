@@ -378,7 +378,6 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
   d = dim(datos)
   datos = cbind(datos, rep(1,d[1]))
   contador = 0
-  numerocambiadas=NULL
   while(contador<max_iter){
     H = sign(datos%*%vini)
     indexa = which(H!=label) #Guarda los indices de los que son distintos
@@ -405,24 +404,25 @@ ajusta_PLA <- function(datos, label, max_iter=10, vini){
 print("********************************Ejercicio 4.3.2************************************")
 matriz_datoss2e2 = cbind(lista61x, lista61y) #creo la matriz de datos
 mi_labels2e2 = etiquetas6
-max_itera100 = 100
+max_iter100 = 100
 d = dim(matriz_datoss2e2)
 
 vector_inicial0 = rep(0,d[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial0))
+print(ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_iter100, vector_inicial0))
 
 for(i in 1:10){
 writeLines("\n***Ajuste PLA con vector aleatorio:***")
     vector_inicial_random = runif(d[2],0,1)
     print(vector_inicial_random)
-    ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_itera100, vector_inicial_random)
+    ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_iter100, vector_inicial_random)
 }
 
 ###################################################
 ##################EJERCICIO 4.3.3##################
 ###################################################
 print("********************************Ejercicio 4.3.3************************************")
+print("Ver gráficas 4.3.3")
 max_iter10 = 10
 max_iter1000 = 1000
 matriz_datoss2e3 = cbind(lista61x, lista61y) #creo la matriz de datos
@@ -430,18 +430,11 @@ etiquetasorigs2e3 = etiquetas8
 intervalors2e3 = intervalo6
 d = dim(matriz_datoss2e3)
 
-
 #Representamos las muestras con las etiquetas originales
-plot(NULL,NULL, col= "red", 
-     xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
-     ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
-     main="4.3.3.Etiquetas antes de PLA ") 
-for(k in 1:length(matriz_datoss2e3[,1])){
-  if(etiquetasorigs2e3[k] == 1)
-    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "orange")
-  else
-    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "green")
-}
+plot(matriz_datoss2e3[,1], matriz_datoss2e3[,2],main="4.3.3.Etiquetas antes de PLA ",
+       xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
+       ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
+       col = (-etiquetasorigs2e3 +5)/2)
 
 #Realizo PLA
 vector_inicial0 = rep(0,d[2])
@@ -450,25 +443,22 @@ hiperplanos3e3i10 = ajusta_PLA(matriz_datoss2e3,etiquetasorigs2e3, max_iter10, v
 coefas2e3 = -hiperplanos3e3i10[3]/hiperplanos3e3i10[2]
 coefbs2e3 = -hiperplanos3e3i10[1]/hiperplanos3e3i10[2]
 
-#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
-plot(NULL,NULL, col= "red", 
-     xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
-     ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
-     main="4.3.3.Etiquetas tras PLA ") 
-abline(coefbs2e3,coefas2e3) # Recta ax+b (pendiente a)(corte b)
-
+#Etiqueto las muestras en funcion del hiperplano
 etiquetass2e3 = NULL                                  #Será un vector con valores 1 y -1
 for(k in 1:length(matriz_datoss2e3[,1])){
   numi = matriz_datoss2e3[k,2] -coefas2e3*matriz_datoss2e3[k,1] -coefbs2e3
-  if(numi>0){                                       #valores positivos de la funcion--> etiqueta 1.
-    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2],col= "orange") #Los pinto en color naranja
-    etiquetass2e3 = c(etiquetass2e3, 1)
-  }
-  if(numi<0){                                       #valores negativos de la funcion-->etiqueta -1
-    points(matriz_datoss2e3[k,1], matriz_datoss2e3[k,2], col="green")  #Los pinto en color verde
+  if(numi>0)                                      #valores positivos de la funcion--> etiqueta 1.
+     etiquetass2e3 = c(etiquetass2e3, 1)
+  else                                      #valores negativos de la funcion-->etiqueta -1
     etiquetass2e3 = c(etiquetass2e3, -1)
-  }
 }
+
+#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
+plot(matriz_datoss2e3[,1], matriz_datoss2e3[,2],main="4.3.3.Etiquetas tras PLA ",
+     xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
+     ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
+     col = (-etiquetass2e3 +5)/2)
+abline(coefbs2e3,coefas2e3) # Recta ax+b (pendiente a)(corte b)
 
 #Obtengo etiquetas cambiadas por PLA
 etiquetas_cambiadas = which(etiquetasorigs2e3!=etiquetass2e3) 
@@ -487,16 +477,11 @@ intervalors2e4 = intervalo6
 ds2e4 = dim(matriz_datoss2e4)
 
 #Representamos las muestras con las etiquetas originales
-plot(NULL,NULL, col= "red", 
+plot(matriz_datoss2e4[,1], matriz_datoss2e4[,2],
+     main="4.3.4:Etiquetas antes de PLA. Datos funcion1 4.2.7 ",
      xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
      ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
-     main="4.3.4:Etiquetas antes de PLA. Datos de funcion1 de 4.2.7 ") 
-for(k in 1:length(matriz_datoss2e4[,1])){
-  if(etiquetasorigs2e4[k] == 1)
-    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "orange")
-  else
-    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "green")
-}
+     col = (-etiquetasorigs2e4 +5)/2)
 
 #Realizo PLA
 vector_inicial0s2e4 = rep(0,ds2e4[2])
@@ -505,25 +490,20 @@ hiperplanos2e4i10 = ajusta_PLA(matriz_datoss2e4,etiquetasorigs2e4, max_iter10, v
 coefas2e4 = -hiperplanos2e4i10[3]/hiperplanos2e4i10[2]
 coefbs2e4 = -hiperplanos2e4i10[1]/hiperplanos2e4i10[2]
 
-#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
-plot(NULL,NULL, col= "red", 
-     xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
-     ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
-     main="4.3.4.Etiquetas tras PLA ") 
-abline(coefbs2e4,coefas2e4) # Recta ax+b (pendiente a)(corte b)
-
 etiquetass2e4 = NULL                                  #Será un vector con valores 1 y -1
 for(k in 1:length(matriz_datoss2e4[,1])){
   numi = matriz_datoss2e4[k,2] -coefas2e4*matriz_datoss2e4[k,1] -coefbs2e4
-  if(numi>0){                                       #valores positivos de la funcion--> etiqueta 1.
-    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2],col= "orange") #Los pinto en color naranja
+  if(numi>0)
     etiquetass2e4 = c(etiquetass2e4, 1)
-  }
-  if(numi<0){                                       #valores negativos de la funcion-->etiqueta -1
-    points(matriz_datoss2e4[k,1], matriz_datoss2e4[k,2], col="green")  #Los pinto en color verde
+  else                                       #valores negativos de la funcion-->etiqueta -1
     etiquetass2e4 = c(etiquetass2e4, -1)
-  }
 }
+#Representamos las muestras con las nuevas etiquetas generadas por el hiperplano de PLA
+plot(matriz_datoss2e4[,1], matriz_datoss2e4[,2],main="4.3.4.Etiquetas tras PLA ",
+     xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
+     ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
+     col = (-etiquetass2e4 +5)/2)
+abline(coefbs2e4,coefas2e4) # Recta ax+b (pendiente a)(corte b)
 
 #Obtengo etiquetas cambiadas por PLA
 etiquetas_cambiadass2e4 = which(etiquetasorigs2e4!=etiquetass2e4) 
@@ -537,15 +517,11 @@ print(num_etiquetas_cambiadass2e4)
 ###################################################
 PLA_grafica <- function(datos, label, max_iter=10, vini, intervalo){
   #Dibujo los datos etiquetados
-  plot(datos[1,1], datos[1,2], main="4.3.5: Ajuste PLA",
+  plot(datos[,1], datos[,2],main="4.3.5: Ajuste PLA",
        xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-       ylim = c(intervalo[1], intervalo[length(intervalo)]),)
-  for(i in 1:length(label)){
-    if(label[i] == 1)
-      points(datos[i,1], datos[i,2], col="orange")
-    else
-      points(datos[i,1], datos[i,2], col="green")
-  }
+       ylim = c(intervalo[1], intervalo[length(intervalo)]),
+       col = (-label +5)/2)
+  
   vini = c(vini, 1)
   d = dim(datos)
   datos = cbind(datos, rep(1,d[1]))
@@ -560,7 +536,7 @@ PLA_grafica <- function(datos, label, max_iter=10, vini, intervalo){
     }else{
       i = sample(indexa, 1)
       vini = vini + datos[i,]*label[i]
-      #abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
+      abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
     }
     contador= contador+1
   }
@@ -584,7 +560,7 @@ ds2e5 = dim(matriz_datoss2e5)
 
 vector_inicial0s2e5 = rep(0,ds2e5[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, max_itera100,
+print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, max_iter100,
                   vector_inicial0s2e5, intervalors2e3))
 
 
@@ -593,15 +569,11 @@ print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, max_itera100,
 ###################################################
 PLA_grafica_MOD <- function(datos, label, max_iter=10, vini, intervalo){
   #Dibujo los datos etiquetados
-  plot(datos[1,1], datos[1,2], main="4.3.6: Ajuste PLA",
+  plot(datos[,1], datos[,2],main="4.3.6: Ajuste PLA",
        xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-       ylim = c(intervalo[1], intervalo[length(intervalo)]),)
-  for(i in 1:length(label)){
-    if(label[i] == 1)
-      points(datos[i,1], datos[i,2], col="orange")
-    else
-      points(datos[i,1], datos[i,2], col="green")
-  }
+       ylim = c(intervalo[1], intervalo[length(intervalo)]),
+       col = (-label +5)/2)
+  
   vini = c(vini, 1)
   d = dim(datos)
   datos = cbind(datos, rep(1,d[1]))
@@ -624,7 +596,7 @@ PLA_grafica_MOD <- function(datos, label, max_iter=10, vini, intervalo){
         mejorvini=vini
         mejorbuenas=length(indexa)
       }
-      #abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
+      abline(-vini[3]/vini[2], -vini[1]/vini[2], col="thistle1")
 
     }
     contador= contador+1
@@ -634,7 +606,6 @@ PLA_grafica_MOD <- function(datos, label, max_iter=10, vini, intervalo){
 
   print("Numero de errores:")
   print(mejorbuenas)
-  
   abline(-mejorvini[3]/mejorvini[2], -mejorvini[1]/mejorvini[2], col="thistle3")
   print("Vector de parada:")
   mejorvini
@@ -648,7 +619,7 @@ ds2e6 = dim(matriz_datoss2e6)
 
 vector_inicial0s2e6 = rep(0,ds2e6[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
-print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
+print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_iter100,
                   vector_inicial0s2e6, intervalors2e3))
 ########################################################################
 ############################### SECCION 3 ##############################
