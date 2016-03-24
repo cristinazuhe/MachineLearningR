@@ -1,6 +1,7 @@
 ########################################################################
-############################### SECCION 1 ##############################
+############################### SECCION 2 ##############################
 ########################################################################
+print("###############################SECCION 2###################################")
 ###################################################
 ##################EJERCICIO 4.2.1##################
 ###################################################
@@ -23,7 +24,8 @@ simula_unif <- function(N=3, dim=5, rang=0:9) {
   }
   return(mi_lista)
 }
-print("Salima simula_unif por defecto:")
+print("********************************Ejercicio 4.2.1*********************************")
+print("Salida simula_unif por defecto:")
 print(simula_unif())
 
 ###################################################
@@ -51,6 +53,9 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
   }
   return(mi_lista)
 }
+print("********************************Ejercicio 4.2.2*********************************")
+print("Salida simula_gaus por defecto:")
+print(simula_gaus())
 
 ###################################################
 ##################EJERCICIO 4.2.3##################
@@ -59,19 +64,22 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
 N3=50
 dim3=2
 intervalo3 = -50:50
-lista3 = simula_unif(N3,dim3,intervalo3)      #Obtengo la lista de vectores de la funcion
-
+lista3 = simula_unif(N3,dim3,intervalo3)         #Obtengo la lista de vectores de la funcion
 lista3x=NULL
 lista3y=NULL
+
 for(k in 1:N3){
-  lista3x = c(lista3x,lista3[[k]][1])                    #en lista3x tendre todos los valores x.(primeros)
-  lista3y = c(lista3y,lista3[[k]][2])                    #en lista3y tendre todos los valores y.(segundos)
+  lista3x = c(lista3x,lista3[[k]][1])            #en lista3x tendre todos los valores x.(primeros)
+  lista3y = c(lista3y,lista3[[k]][2])            #en lista3y tendre todos los valores y.(segundos)
 }
 
 #Represento los datos
 plot(lista3x, lista3y, 
      main = "4.2.3: Valores función uniforme",
      col="purple")
+
+print("********************************Ejercicio 4.2.3*********************************")
+print("Ver gráfica 4.2.3")
 
 ###################################################
 ##################EJERCICIO 4.2.4##################
@@ -81,20 +89,20 @@ N4=50
 dim4=2
 intervalo4 = 5:7
 lista4 = simula_gaus(N4,dim4,intervalo4)         #Obtengo la lista de vectores de la funcion gaussiana
-
-#Creo un vector con los valores y (valores aleatorios generados pares).
-#Creo un vector con los valores x (valores aleatorios generados impares).
 lista4x = NULL
 lista4y= NULL
+
 for(k in 1:N4){
-    lista4x = c(lista4x,lista4[[k]][1])          
-    lista4y = c(lista4y,lista4[[k]][2])                                 
+    lista4x = c(lista4x,lista4[[k]][1])          #en lista4x tendre todos los valores x.(primeros)  
+    lista4y = c(lista4y,lista4[[k]][2])           #en lista4y tendre todos los valores y.(segundos)                        
 }
 
 plot(lista4x,lista4y, 
      main = "4.2.4: Valores función gaussiana",
      col="purple")
 
+print("********************************Ejercicio 4.2.4*********************************")
+print("Ver gráfica 4.2.4")
 
 ###################################################
 ##################EJERCICIO 4.2.5##################
@@ -109,61 +117,61 @@ simula_recta <- function(intervalo=-50:50){
   }
   segundoy = sample(intervalo, 1)
   
-  #Añado los dos puntos del cuadrado para dibujarlos
-  x=c(primerx, segundox) 
-  y=c(primery, segundoy)
-  
   #Calculo a, b que definen la recta que pasa por los dos puntos
   a= ((segundoy - primery)/(segundox - primerx))
   b= (primery - (a*primerx))
-  
-  #Represento el cuadrado de trabajo, los puntos y la recta que los une
-  plot(x,y, col= "red", 
-       xlim = c(intervalo[1], intervalo[length(intervalo)]), 
-       ylim = c(intervalo[1], intervalo[length(intervalo)]),
-       main="Recta cortando al cuadrado. ") 
-  abline(b,a) # Recta ax+b (pendiente a)(corte b)
-
   val=c(a,b)
+  
   return(val) #devuelvo los coeficientes a y b
 }
+
+print("********************************Ejercicio 4.2.5*********************************")
+print("Coeficientes de la recta en intervalo por defecto:")
+print(simula_recta())
 
 ###################################################
 ##################EJERCICIO 4.2.6##################
 ###################################################
-#Genero la recta que corta al cuadrado
+#Genero la recta que corta al cuadrado y obtengo sus coeficientes
 val = simula_recta(-50:50)
-#Obtengo los coeficientes de la recta
 a = val[1]
 b = val[2]
 
-#Genero los datos aleatorios uniformes y los represento junto a la recta anterior
+#Genero los datos aleatorios uniformes
 N6=50
 dim6=2
 intervalo6 = -50:50
 lista6 = simula_unif(N6,dim6,intervalo6)
-
 lista61x=NULL
 lista61y=NULL
+
 for(k in 1:N6){
-    lista61x = c(lista61x,lista6[[k]][1]) #en lista61y tendre todos los valores y.
-    lista61y = c(lista61y,lista6[[k]][2]) #en lista61x tendre todos los valores x.
+  lista61x = c(lista61x,lista6[[k]][1])                    #en lista61y tendre todos los valores y.
+  lista61y = c(lista61y,lista6[[k]][2])                    #en lista61x tendre todos los valores x.
 }
 
+#Represento la recta
+plot(NULL,NULL, main="4.2.6:Simula recta. ",
+     xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
+     ylim = c(intervalo6[1], intervalo6[length(intervalo6)])) 
+abline(b,a)                                               # Recta ax+b (pendiente a)(corte b)
+
 #Etiqueto los datos mediante la función y las almaceno en etiquetas6
-etiquetas6 = NULL                                  #Será un vector con valores 1 y -1
+etiquetas6 = NULL                                         #Será un vector con etiquetas 1 y -1
 for(k in 1:length(lista61x)){
   num = lista61y[k] -a*lista61x[k] -b
-  if(num>0){                                       #valores positivos de la funcion--> etiqueta 1.
-    points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
+  if(num>0){                                              #valores positivos de la funcion--> etiqueta 1.
+    points(lista61x[k], lista61y[k],col= "orange")        #Los pinto en color naranja
     etiquetas6 = c(etiquetas6, 1)
   }
-  if(num<0){                                       #valores negativos de la funcion-->etiqueta -1
-    points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
+  else{                                                   #valores negativos de la funcion-->etiqueta -1
+    points(lista61x[k], lista61y[k], col="green")         #Los pinto en color verde
     etiquetas6 = c(etiquetas6, -1)
   }
 }
 
+print("********************************Ejercicio 4.2.6*********************************")
+print("Ver gráfica 4.2.6:")
 ###################################################
 ##################EJERCICIO 4.2.7##################
 ###################################################
@@ -199,7 +207,7 @@ for(k in 1:length(lista61x)){
     points(lista61x[k], lista61y[k],col= "orange")            #Los pinto en color naranja
     etiquetas71 = c(etiquetas71, 1)
   }
-  if(num1<0){                                                 #valores negativos de la funcion-->etiqueta -1
+  else{                                                 #valores negativos de la funcion-->etiqueta -1
     points(lista61x[k], lista61y[k], col="green")             #Los pinto en color verde
     etiquetas71 = c(etiquetas71, -1)
   }
@@ -221,7 +229,7 @@ for(k in 1:length(lista61x)){
     points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
     etiquetas72 = c(etiquetas72, 1)
   }
-  if(num2<0){                                       #valores negativos de la funcion-->etiqueta -1
+  else{                                       #valores negativos de la funcion-->etiqueta -1
     points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
     etiquetas72 = c(etiquetas72, -1)
   }
@@ -244,7 +252,7 @@ for(k in 1:length(lista61x)){
     points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
     etiquetas73 = c(etiquetas73, 1)
   }
-  if(num3<0){                                       #valores negativos de la funcion-->etiqueta -1
+  else{                                       #valores negativos de la funcion-->etiqueta -1
     points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
     etiquetas73 = c(etiquetas73, -1)
   }
@@ -265,12 +273,13 @@ for(k in 1:length(lista61x)){
     points(lista61x[k], lista61y[k],col= "orange") #Los pinto en color naranja
     etiquetas74 = c(etiquetas74, 1)
   }
-  if(num4<0){                                       #valores negativos de la funcion-->etiqueta -1
+  else{                                       #valores negativos de la funcion-->etiqueta -1
     points(lista61x[k], lista61y[k], col="green")  #Los pinto en color verde
     etiquetas74 = c(etiquetas74, -1)
   }
 }
-
+print("********************************Ejercicio 4.2.7*********************************")
+print("Ver gráficas 4.2.7")
 
 ###################################################
 ##################EJERCICIO 4.2.8##################
@@ -279,11 +288,7 @@ for(k in 1:length(lista61x)){
 etiquetas8 = etiquetas6
 #Obtengo el número de muestras positivas y negativas a cambiar 
 #Un 10% de todas las que hay de positivas y negativas. 
-numeropositivos8 =0
-for(i in 1:length(etiquetas6)) {
- if(etiquetas6[i] == 1)
-  numeropositivos8 = numeropositivos8+1
-}
+numeropositivos8 =length(which(etiquetas6 ==1))
 numeronegativos8 = length(etiquetas6) - numeropositivos8
 
 #positivosacamiar8 muestras han de pasar de etiquetado 1 a -1
@@ -315,71 +320,56 @@ for(j in 1:negativosacambiar8){
 plot(lista61x, lista61y,
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     col = "orange", main="4.2.8:10% muestras modificadas")
+     col = (-etiquetas8 +5)/2, main="4.2.8(A):10% muestras modificadas")
 abline(b,a) # Recta ax+b (pendiente a)(corte b)
-#En etiquetas8 ya tengo la muestra con las etiquetas cambiadas
-for(i in 1:length(etiquetas8)){
-  if(etiquetas8[i] == 1){
-    points(lista61x[i], lista61y[i], col = "orange")
-  }else
-    points(lista61x[i], lista61y[i], col = "green")
-}
 
+print("********************************Ejercicio 4.2.8*********************************")
+print("*****Parte A*****")
+print("Ver grafica 4.2.8(A)")
 
 #PARTE B
 #con primera funcion:
 plot(x7,y71a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "4.2.8-b. Primera funcion", type="l")
+     main = "4.2.8(B). Primera funcion", type="l")
 points(x7, y71b, col="purple", type="l")
-for(i in 1:length(etiquetas8)){
-  if(etiquetas8[i] == 1){
-    points(lista61x[i], lista61y[i], col = "orange")
-  }else
-    points(lista61x[i], lista61y[i], col = "green")
-}
+points(lista61x, lista61y,
+     col = (-etiquetas8 +5)/2, main="4.2.8(B):Primera funcion")
 
 #Con segunda funcion
 plot(x7,y72a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "4.2.8-b. Segunda funcion", type="l")
+     main = "4.2.8(B). Segunda funcion", type="l")
 points(x7, y72b, col="purple", type="l")
-for(i in 1:length(etiquetas8)){
-  if(etiquetas8[i] == 1){
-    points(lista61x[i], lista61y[i], col = "orange")
-  }else
-    points(lista61x[i], lista61y[i], col = "green")
-}
+points(lista61x, lista61y,
+       col = (-etiquetas8 +5)/2, main="4.2.8(B):Segunda funcion")
 
 #Con tercera funcion
 plot(x7,y73a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "4.2.8-b. Tercera funcion", type="l")
+     main = "4.2.8(B). Tercera funcion", type="l")
 points(x7, y73b, col="purple", type="l")
-for(i in 1:length(etiquetas8)){
-  if(etiquetas8[i] == 1){
-    points(lista61x[i], lista61y[i], col = "orange")
-  }else
-    points(lista61x[i], lista61y[i], col = "green")
-}
+points(lista61x, lista61y,
+       col = (-etiquetas8 +5)/2, main="4.2.8(B):Tercera funcion")
 
 #Con cuarta funcion
 plot(x7,y74, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
      ylim = c(intervalo6[1], intervalo6[length(intervalo6)]),
-     main = "4.2.8-b. Cuarta funcion", type="l")
-for(i in 1:length(etiquetas8)){
-  if(etiquetas8[i] == 1){
-    points(lista61x[i], lista61y[i], col = "orange")
-  }else
-    points(lista61x[i], lista61y[i], col = "green")
-}
+     main = "4.2.8(B). Cuarta funcion", type="l")
+points(lista61x, lista61y,
+       col = (-etiquetas8 +5)/2, main="4.2.8(B):Cuarta funcion")
+
+print("*****Parte B*****")
+print("Ver graficas 4.2.8(B)")
+
 ########################################################################
-############################### SECCION 2 ##############################
+############################### SECCION 3 ##############################
 ########################################################################
+print("###############################SECCION 3###################################")
 ###################################################
 ##################EJERCICIO 4.3.1##################
 ###################################################
@@ -663,37 +653,3 @@ print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_itera100,
 ########################################################################
 ############################### SECCION 3 ##############################
 ########################################################################
-
-###################################################
-##################EJERCICIO 4.4.2##################
-###################################################
-#Leo el fichero
-lectura_fichero <- read.table("zip.train", header=FALSE)
-
-#indices de los vectores de datos que representan 1's o 5's
-indicess3e2= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
-
-#matrizdatostodos es una lista con las matrices que representan las imagenes de 1's y 5's
-matrizdatostodos = NULL
-for(k in 1:length(indicess3e2)){
-    matrizdatos=matrix(as.numeric(lectura_fichero[indicess3e2[k],2:ncol(lectura_fichero)]), nrow=16,ncol=16)
-    matrizdatosderecha=NULL
-    for(i in nrow(matrizdatos):1){
-      matrizdatosderecha = cbind(matrizdatosderecha, matrizdatos[,i])
-    }
-    matrizdatostodos = c(matrizdatostodos, list(matrizdatosderecha))
-}
-#image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
-
-###################################################
-##################EJERCICIO 4.4.3##################
-###################################################
-print("********************************Ejercicio 4.4.3*********************************")
-#Vector con el valor medio para cada matriz
-vectormedias = NULL
-for(k in 1:length(indicess3e2)){
-   vectormedias = c(vectormedias, mean(apply(matrizdatostodos[[k]],1, mean)))
-}
-
-#Vector con grado de simetria vertical para cada matriz
-print(matrizdatostodos[[1]])

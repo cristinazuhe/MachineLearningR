@@ -20,7 +20,7 @@ for(k in 1:length(indicess3e2)){
     for(i in nrow(matrizdatos):1){
       matrizdatosderecha = cbind(matrizdatosderecha, matrizdatos[,i])
     }
-    matrizdatostodos = c(matrizdatostodos, list(matrizdatosderecha))
+    matrizdatostodos = c(matrizdatostodos, list(matrizdatos))
 }
 #image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
 
@@ -51,37 +51,34 @@ for(k in 1:length(indicess3e2)){
 ###################################################
 ##################EJERCICIO 4.4.4##################
 ###################################################
-plot(vectormedias, vectorsimetrias, main="4.4.4. Representacion 1's y 5's", col="blue")
-for(k in 1:length(indicess3e2)){
-   if(lectura_fichero[indicess3e2,1][k] == 5)
-   points(vectormedias[k], vectorsimetrias[k], col="red")
-}
+matrizdatoss3e4 = cbind(vectormedias[1:2], vectorsimetrias[1:2])
+etiquetass3e4 = lectura_fichero[indicess3e2[1:2],1]
+plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], main="4.4.5. Representacion 1's y 5's", col=(etiquetass3e4-1)/2 +2)
+
 
 ###################################################
 ##################EJERCICIO 4.4.5##################
 ###################################################
 regresion <- function(MatrizDatos, Etiquetas){
-  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", col=(Etiquetas-1)/2 +2)
+  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", 
+       col=(Etiquetas-1)/2 +2, xlim=c(-10,10), ylim=c(-10, 250))
   
   d = dim(MatrizDatos)
- # MatrizDatos = cbind(MatrizDatos, rep(1,d[1]))
-  
+  MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
+
   sv = svd(MatrizDatos)
   U = sv$u
-  D = diag(sv$d)
+  Dcruz = diag(1/sv$d)
   V = sv$v
-  
-  Dcruz = solve(t(D)%*%D)%*%t(D) #pseudoinversa bien hecha
+
   XtraX_inv = V%*%Dcruz%*%t(V)
-  Xcruz = XtraX_inv%*%t(MatrizDatos)
-  
+  Xcruz = XtraX_inv%*%t(MatrizDatos)Z
+print(Xcruz)
   #Obtengo w:
   w = Xcruz%*%Etiquetas
   print(w)
-  abline(w[2,], w[1,], col="thistle3")
+  abline( -w[3,]/w[1,],-w[2,]/w[1,],  col="thistle3")
 }
 
-matrizdatoss3e5 = cbind(vectormedias, vectorsimetrias)
-etiquetass3e5 = lectura_fichero[indicess3e2,1]
-regresion(matrizdatoss3e5, etiquetass3e5)
+regresion(matrizdatoss3e4, etiquetass3e4)
 
