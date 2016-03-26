@@ -51,8 +51,8 @@ for(k in 1:length(indicess3e2)){
 ###################################################
 ##################EJERCICIO 4.4.4##################
 ###################################################
-matrizdatoss3e4 = cbind(vectormedias[1:2], vectorsimetrias[1:2])
-etiquetass3e4 = lectura_fichero[indicess3e2[1:2],1]
+matrizdatoss3e4 = cbind(vectormedias, vectorsimetrias)
+etiquetass3e4 = lectura_fichero[indicess3e2,1]
 plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], main="4.4.5. Representacion 1's y 5's", col=(etiquetass3e4-1)/2 +2)
 
 
@@ -61,23 +61,24 @@ plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], main="4.4.5. Representacion 1's y
 ###################################################
 regresion <- function(MatrizDatos, Etiquetas){
   plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", 
-       col=(Etiquetas-1)/2 +2, xlim=c(-10,10), ylim=c(-10, 250))
+       col=(Etiquetas-1)/2 +2)
   
   d = dim(MatrizDatos)
   MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
 
   sv = svd(MatrizDatos)
   U = sv$u
-  Dcruz = diag(1/sv$d)
+  D = diag(sv$d)
   V = sv$v
 
-  XtraX_inv = V%*%Dcruz%*%t(V)
-  Xcruz = XtraX_inv%*%t(MatrizDatos)Z
-print(Xcruz)
+  Dpseudo = solve(t(D)%*%D)%*%t(D)
+  XtraX_inv = V%*%Dpseudo%*%t(V)
+  Xcruz = XtraX_inv%*%t(MatrizDatos)
+
   #Obtengo w:
-  w = Xcruz%*%Etiquetas
+  w = Xcruz%*%as.matrix(Etiquetas)
   print(w)
-  abline( -w[3,]/w[1,],-w[2,]/w[1,],  col="thistle3")
+  abline( -w[1,]/w[2,],-w[3,]/w[2,],  col="thistle3")
 }
 
 regresion(matrizdatoss3e4, etiquetass3e4)
