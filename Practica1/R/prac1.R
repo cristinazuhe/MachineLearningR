@@ -1,3 +1,11 @@
+#######################################################################
+################## Cristina Zuheros Montes - 2016 #####################
+#######################################################################
+#Funcion auxiliar para ir parado la ejecucion
+pulsaTecla <- function(){
+  cat ("Pulse Intro para continuar...")
+  line <- readline()
+}
 ########################################################################
 ############################### SECCION 2 ##############################
 ########################################################################
@@ -27,6 +35,7 @@ simula_unif <- function(N=3, dim=5, rang=0:9) {
 print("********************************Ejercicio 4.2.1*********************************")
 print("Salida simula_unif por defecto:")
 print(simula_unif())
+pulsaTecla()
 
 ###################################################
 ##################EJERCICIO 4.2.2##################
@@ -56,7 +65,7 @@ simula_gaus <- function(N=3, dim=5, sigma=1:9){
 print("********************************Ejercicio 4.2.2*********************************")
 print("Salida simula_gaus por defecto:")
 print(simula_gaus())
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.2.3##################
 ###################################################
@@ -80,7 +89,7 @@ plot(lista3x, lista3y,
 
 print("********************************Ejercicio 4.2.3*********************************")
 print("Ver gráfica 4.2.3")
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.2.4##################
 ###################################################
@@ -103,7 +112,7 @@ plot(lista4x,lista4y,
 
 print("********************************Ejercicio 4.2.4*********************************")
 print("Ver gráfica 4.2.4")
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.2.5##################
 ###################################################
@@ -128,7 +137,7 @@ simula_recta <- function(intervalo=-50:50){
 print("********************************Ejercicio 4.2.5*********************************")
 print("Coeficientes de la recta en intervalo por defecto:")
 print(simula_recta())
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.2.6##################
 ###################################################
@@ -172,9 +181,13 @@ for(k in 1:length(lista61x)){
 
 print("********************************Ejercicio 4.2.6*********************************")
 print("Ver gráfica 4.2.6:")
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.2.7##################
 ###################################################
+print("********************************Ejercicio 4.2.7*********************************")
+print("Ver gráficas 4.2.7")
+
 etiquetas71 = NULL     #Vector con etiquetas para funcion1
 etiquetas72 = NULL     #Vector con etiquetas para funcion2
 etiquetas73 = NULL     #Vector con etiquetas para funcion3
@@ -212,6 +225,7 @@ for(k in 1:length(lista61x)){
     etiquetas71 = c(etiquetas71, -1)
   }
 }
+pulsaTecla()
 
 #Analogo para...
 #SEGUNDA FUNCION
@@ -234,7 +248,7 @@ for(k in 1:length(lista61x)){
     etiquetas72 = c(etiquetas72, -1)
   }
 }
-
+pulsaTecla()
 
 #Analogo para...
 #TERCERA FUNCION
@@ -257,7 +271,7 @@ for(k in 1:length(lista61x)){
     etiquetas73 = c(etiquetas73, -1)
   }
 }
-
+pulsaTecla()
 
 #Analogo para...
 #CUARTA FUNCION
@@ -278,8 +292,7 @@ for(k in 1:length(lista61x)){
     etiquetas74 = c(etiquetas74, -1)
   }
 }
-print("********************************Ejercicio 4.2.7*********************************")
-print("Ver gráficas 4.2.7")
+pulsaTecla()
 
 ###################################################
 ##################EJERCICIO 4.2.8##################
@@ -326,8 +339,12 @@ abline(b,a) # Recta ax+b (pendiente a)(corte b)
 print("********************************Ejercicio 4.2.8*********************************")
 print("*****Parte A*****")
 print("Ver grafica 4.2.8(A)")
+pulsaTecla()
 
 #PARTE B
+print("*****Parte B*****")
+print("Ver graficas 4.2.8(B)")
+
 #con primera funcion:
 plot(x7,y71a, col = "purple",
      xlim = c(intervalo6[1], intervalo6[length(intervalo6)]), 
@@ -336,6 +353,7 @@ plot(x7,y71a, col = "purple",
 points(x7, y71b, col="purple", type="l")
 points(lista61x, lista61y,
      col = (-etiquetas8 +5)/2, main="4.2.8(B):Primera funcion")
+pulsaTecla()
 
 #Con segunda funcion
 plot(x7,y72a, col = "purple",
@@ -345,6 +363,7 @@ plot(x7,y72a, col = "purple",
 points(x7, y72b, col="purple", type="l")
 points(lista61x, lista61y,
        col = (-etiquetas8 +5)/2, main="4.2.8(B):Segunda funcion")
+pulsaTecla()
 
 #Con tercera funcion
 plot(x7,y73a, col = "purple",
@@ -354,6 +373,7 @@ plot(x7,y73a, col = "purple",
 points(x7, y73b, col="purple", type="l")
 points(lista61x, lista61y,
        col = (-etiquetas8 +5)/2, main="4.2.8(B):Tercera funcion")
+pulsaTecla()
 
 #Con cuarta funcion
 plot(x7,y74, col = "purple",
@@ -362,9 +382,7 @@ plot(x7,y74, col = "purple",
      main = "4.2.8(B). Cuarta funcion", type="l")
 points(lista61x, lista61y,
        col = (-etiquetas8 +5)/2, main="4.2.8(B):Cuarta funcion")
-
-print("*****Parte B*****")
-print("Ver graficas 4.2.8(B)")
+pulsaTecla()
 
 ########################################################################
 ############################### SECCION 3 ##############################
@@ -417,7 +435,7 @@ writeLines("\n***Ajuste PLA con vector aleatorio:***")
     print(vector_inicial_random)
     ajusta_PLA(matriz_datoss2e2,mi_labels2e2, max_iter100, vector_inicial_random)
 }
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.3.3##################
 ###################################################
@@ -435,6 +453,7 @@ plot(matriz_datoss2e3[,1], matriz_datoss2e3[,2],main="4.3.3.Etiquetas antes de P
        xlim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]), 
        ylim = c(intervalors2e3[1], intervalors2e3[length(intervalors2e3)]),
        col = (-etiquetasorigs2e3 +5)/2)
+pulsaTecla()
 
 #Realizo PLA
 vector_inicial0 = rep(0,d[2])
@@ -465,12 +484,13 @@ etiquetas_cambiadas = which(etiquetasorigs2e3!=etiquetass2e3)
 num_etiquetas_cambiadas = length(etiquetas_cambiadas)
 print("Número de etiquetas cambiadas: ")
 print(num_etiquetas_cambiadas)
-
+pulsaTecla()
 
 ###################################################
 ##################EJERCICIO 4.3.4##################
 ###################################################
 print("********************************Ejercicio 4.3.4************************************")
+print("Ver gráficas 4.3.4")
 matriz_datoss2e4 = cbind(lista61x, lista61y) #creo la matriz de datos
 etiquetasorigs2e4 = etiquetas71
 intervalors2e4 = intervalo6
@@ -482,6 +502,7 @@ plot(matriz_datoss2e4[,1], matriz_datoss2e4[,2],
      xlim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]), 
      ylim = c(intervalors2e4[1], intervalors2e4[length(intervalors2e4)]),
      col = (-etiquetasorigs2e4 +5)/2)
+pulsaTecla()
 
 #Realizo PLA
 vector_inicial0s2e4 = rep(0,ds2e4[2])
@@ -510,7 +531,7 @@ etiquetas_cambiadass2e4 = which(etiquetasorigs2e4!=etiquetass2e4)
 num_etiquetas_cambiadass2e4 = length(etiquetas_cambiadass2e4)
 print("Número de etiquetas cambiadas: ")
 print(num_etiquetas_cambiadass2e4)
-
+pulsaTecla()
 
 ###################################################
 ##################EJERCICIO 4.3.5##################
@@ -562,7 +583,7 @@ vector_inicial0s2e5 = rep(0,ds2e5[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
 print(PLA_grafica(matriz_datoss2e5,mi_labels2e5, max_iter100,
                   vector_inicial0s2e5, intervalors2e3))
-
+pulsaTecla()
 
 ###################################################
 ##################EJERCICIO 4.3.6##################
@@ -621,6 +642,7 @@ vector_inicial0s2e6 = rep(0,ds2e6[2])
 writeLines("\n***Ajuste PLA con vector inicial 0:***")
 print(PLA_grafica_MOD(matriz_datoss2e6,mi_labels2e6, max_iter100,
                   vector_inicial0s2e6, intervalors2e3))
+pulsaTecla()
 ########################################################################
 ############################### SECCION 4 ##############################
 ########################################################################
@@ -645,7 +667,7 @@ image(matrizdatostodos[[100]], main="4.4.2: Representacion 1") #Así veo la image
 
 print("********************************Ejercicio 4.4.2*********************************")
 print("Ver imagen 4.4.2")
-
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.4.3##################
 ###################################################
@@ -682,6 +704,7 @@ plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2],
 
 print("********************************Ejercicio 4.4.4*********************************")
 print("Ver grafica 4.4.4")
+pulsaTecla()
 ###################################################
 ##################EJERCICIO 4.4.5##################
 ###################################################
@@ -720,3 +743,4 @@ abline( a=-hiperplanow[1,]/hiperplanow[3,],
 
 print("********************************Ejercicio 4.4.6*********************************")
 print("Ver grafica 4.4.6")
+pulsaTecla()
