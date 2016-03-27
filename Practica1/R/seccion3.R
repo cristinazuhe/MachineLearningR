@@ -2,7 +2,6 @@
 ########################################################################
 ############################### SECCION 3 ##############################
 ########################################################################
-
 ###################################################
 ##################EJERCICIO 4.4.2##################
 ###################################################
@@ -15,15 +14,18 @@ indicess3e2= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
 #matrizdatostodos es una lista con las matrices que representan las imagenes de 1's y 5's
 matrizdatostodos = NULL
 for(k in 1:length(indicess3e2)){
-    matrizdatos=matrix(as.numeric(lectura_fichero[indicess3e2[k],2:ncol(lectura_fichero)]), nrow=16,ncol=16)
+    matrizdatos=matrix(as.numeric(lectura_fichero[indicess3e2[k],2:ncol(lectura_fichero)]), 
+                       nrow=16,ncol=16)
     matrizdatostodos = c(matrizdatostodos, list(matrizdatos))
 }
-#image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
+image(matrizdatostodos[[100]], main="4.4.2: Representacion 1") #Así veo la imagen (matriz) 100 de la lista
+
+print("********************************Ejercicio 4.4.2*********************************")
+print("Ver imagen 4.4.2")
 
 ###################################################
 ##################EJERCICIO 4.4.3##################
 ###################################################
-print("********************************Ejercicio 4.4.3*********************************")
 #Vector con el valor medio para cada matriz
 vectormedias = NULL
 for(k in 1:length(indicess3e2)){
@@ -45,28 +47,29 @@ for(k in 1:length(indicess3e2)){
 }
 vectorsimetrias = -vectorsimetrias
 
+
 ###################################################
 ##################EJERCICIO 4.4.4##################
 ###################################################
 matrizdatoss3e4 = cbind(vectormedias, vectorsimetrias)
 etiquetass3e4 = lectura_fichero[indicess3e2,1]
-plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], main="4.4.5. Representacion 1's y 5's", col=(etiquetass3e4-1)/2 +2)
+plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], 
+     main="4.4.4. Representacion 1's y 5's", col=(etiquetass3e4-1)/2 +2,
+     xlab="Media", ylab="Simetria")
 
-
+print("********************************Ejercicio 4.4.4*********************************")
+print("Ver grafica 4.4.4")
 ###################################################
 ##################EJERCICIO 4.4.5##################
 ###################################################
 regresion <- function(MatrizDatos, Etiquetas){
-  plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", 
-       col=(Etiquetas-1)/2 +2)
-  
   for(i in 1:length(Etiquetas)){
-    if(Etiquetas[i] == 5)
-      Etiquetas[i] =-1
+   if(Etiquetas[i] == 5)
+     Etiquetas[i] =-1
   }
-  
   d = dim(MatrizDatos)
   MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
+  
   X = MatrizDatos
   sv = svd(t(X)%*%X)
   U = sv$u
@@ -77,9 +80,20 @@ regresion <- function(MatrizDatos, Etiquetas){
   Xpseudo = XtraX_inv%*%t(X)
   #Obtengo w:
   w = Xpseudo%*%Etiquetas
-  print(w)
-  abline( a=-w[1,]/w[3,],b=-w[2,]/w[3,],  col="thistle3")
+  return(w)
 }
 
-regresion(matrizdatoss3e4, etiquetass3e4)
+###################################################
+##################EJERCICIO 4.4.6##################
+###################################################
+hiperplanow = regresion(matrizdatoss3e4, etiquetass3e4)
 
+plot(matrizdatoss3e4[,1], matrizdatoss3e4[,2], main="4.4.6. Regresión 1's y 5's", 
+     col=(etiquetass3e4-1)/2 +2, xlab="Media", ylab="Simetria")
+
+abline( a=-hiperplanow[1,]/hiperplanow[3,],
+        b=-hiperplanow[2,]/hiperplanow[3,], 
+        col="thistle3")
+
+print("********************************Ejercicio 4.4.6*********************************")
+print("Ver grafica 4.4.6")
