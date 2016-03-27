@@ -629,7 +629,7 @@ print("###############################SECCION 4#################################
 ##################EJERCICIO 4.4.2##################
 ###################################################
 #Leo el fichero
-lectura_fichero <- read.table("zip.train", header=FALSE)
+lectura_fichero <- read.table("datos/zip.train", header=FALSE)
 
 #indices de los vectores de datos que representan 1's o 5's
 indicess3e2= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
