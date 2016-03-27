@@ -16,10 +16,6 @@ indicess3e2= which((lectura_fichero[,1]) ==5 |  (lectura_fichero[,1]) ==1)
 matrizdatostodos = NULL
 for(k in 1:length(indicess3e2)){
     matrizdatos=matrix(as.numeric(lectura_fichero[indicess3e2[k],2:ncol(lectura_fichero)]), nrow=16,ncol=16)
-    matrizdatosderecha=NULL
-    for(i in nrow(matrizdatos):1){
-      matrizdatosderecha = cbind(matrizdatosderecha, matrizdatos[,i])
-    }
     matrizdatostodos = c(matrizdatostodos, list(matrizdatos))
 }
 #image(matrizdatostodos[[200]]) #Así veo la imagen (matriz) 200 de la lista
@@ -47,6 +43,7 @@ for(k in 1:length(indicess3e2)){
    }
    vectorsimetrias = c(vectorsimetrias, sumadifabs)
 }
+vectorsimetrias = -vectorsimetrias
 
 ###################################################
 ##################EJERCICIO 4.4.4##################
@@ -63,22 +60,25 @@ regresion <- function(MatrizDatos, Etiquetas){
   plot(MatrizDatos[,1], MatrizDatos[,2], main="4.4.5. Representacion 1's y 5's", 
        col=(Etiquetas-1)/2 +2)
   
+  for(i in 1:length(Etiquetas)){
+    if(Etiquetas[i] == 5)
+      Etiquetas[i] =-1
+  }
+  
   d = dim(MatrizDatos)
   MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
-
-  sv = svd(MatrizDatos)
+  X = MatrizDatos
+  sv = svd(t(X)%*%X)
   U = sv$u
   D = diag(sv$d)
   V = sv$v
 
-  Dpseudo = solve(t(D)%*%D)%*%t(D)
-  XtraX_inv = V%*%Dpseudo%*%t(V)
-  Xcruz = XtraX_inv%*%t(MatrizDatos)
-
+  XtraX_inv = V%*%solve(D)%*%t(V)
+  Xpseudo = XtraX_inv%*%t(X)
   #Obtengo w:
-  w = Xcruz%*%as.matrix(Etiquetas)
+  w = Xpseudo%*%Etiquetas
   print(w)
-  abline( -w[1,]/w[2,],-w[3,]/w[2,],  col="thistle3")
+  abline( a=-w[1,]/w[3,],b=-w[2,]/w[3,],  col="thistle3")
 }
 
 regresion(matrizdatoss3e4, etiquetass3e4)
