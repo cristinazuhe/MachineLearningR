@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\nsimula_unif <- function(N, dim, rango) {\n  if(N>0){\n  casos=1:rango            #valores en el intervalo rango\n  ini_vector = sample(casos, replace = TRUE, dim)  #vector de tamanio dim con valores aleatorios en el intervalo 1-rango\n  mi_lista = list(ini_vector)\n  length(mi_lista) = N;\n  print(mi_lista)\n for( i in 1:N-1){\n    ini_vector = sample(casos, replace = TRUE, dim)  #vector de tamanio dim con valores aleatorios en el intervalo 1-rango\n     mi_lista[i+1] = ini_vector\n  }\n  }\n  else{\n    print(\"No se da un tamanio correcto.\")\n    mi_lista = list(NaN)\n    }\n  return(mi_lista)\n}\n\n",
+    "created" : 1456271717458.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1752789302",
+    "id" : "A9385E01",
+    "lastKnownWriteTime" : 1456272989,
+    "last_content_update" : 1456272989084,
+    "path" : "~/Ejercicios/Practica1/R/prac1.R",
+    "project_path" : "R/prac1.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
