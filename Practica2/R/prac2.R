@@ -97,3 +97,38 @@ print("*************************30 Iteraciones*************************")
 ###################EJERCICIO 1.3###################
 ###############################################
 print("###############################Ejercicio 3###################################")
+newton = function(
+  FUN = function(x, y) x^2 +  2*y^2 +2*sin(2*pi*x)*sin(2*pi*y), interx = c(-3, 3), intery=c(-3,3),
+  val_ini=as.matrix(rbind(1,1)), tasa=0.1, tope = 10^(-14), mimain="", maxiter=15){
+
+  plot(NULL,NULL, xlim = interx, ylim=intery, xlab="x", ylab="y", main = mimain)
+  pintar_grafica(FUN)
+  val_ini = as.matrix(rbind(1,1)) 
+  coste_funcion=FUN(val_ini[1], val_ini[2])
+  contador=0
+  val_sig = val_ini
+  while(coste_funcion>tope && contador<maxiter){
+    hess_fs1e1f1 = deriv(as.expression(body(FUN)), c("x","y"), hessian=TRUE, function.arg=TRUE)
+    hessiana_fs1e1f1 = as.matrix(rbind(c((attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'hessian'))[1],
+                                         (attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'hessian'))[2]),
+                                       c((attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'hessian'))[3],
+                                         (attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'hessian'))[4])))
+    gradiente_fs1e1f1 = as.matrix(rbind((attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'grad'))[1],
+                                        (attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'grad'))[2]))
+    hessiana_fs1e1f1 = solve(hessiana_fs1e1f1)
+
+    val_sig = val_ini -hessiana_fs1e1f1%*%gradiente_fs1e1f1
+    coste_funcion = FUN(val_sig[1], val_sig[2])
+    val_ini = val_sig
+    contador=contador+1
+    points(val_sig, col="orange")
+    print(coste_funcion)
+  }
+  points(val_sig, col="red")
+  print("Numero de iteraciones realizadas:")
+  print(contador)
+  print("Valor obtenido:")
+  print(val_sig)
+}
+
+newton()
