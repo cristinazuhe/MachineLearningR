@@ -168,30 +168,56 @@ coef = simula_recta(rango)
 f4 = function(pto,coef) {          #funcion de la recta
   pto[2]-pto[1]*coef[1]-coef[2]
 }
-
 z0 = apply(datos,1,f4,coef)        #obtiene los valores de la funcion para datos
 etiqueta = sign(z0)                # apartir de ellos crea las etiquetas
-pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
-abline(coef[2],coef[1])            # pinta la recta
+#pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
+#abline(coef[2],coef[1])            # pinta la recta
+
 
 tasa = 0.01
-vector_w=c(0,0) 
+vector_w_ini=c(0,0) 
 
-reglog = function(
-  matriz_datos,etiquetas, interx = c(-1.25, 1.25), intery=c(-1.25,1.25),
-  vector_w=c(0,0), tasa=0.01, tope = 0.01, mimain="", maxiter=20){
-  
-  numerador = etiquetas%*%matriz_datos
-  denominador = 1+exp(etiquetas%*%(matriz_datos%*%vector_w))
-  gradientelog = (numerador/denominador[1,1])/(dim(matriz_datos)[1])
-  
-  vector_w = vector_w + tasa%*%gradientelog
-  
-  print("Valor obtenido:")
-  print(vector_w)
+reglog = function(datos,etiqueta,vector_w_ini=c(0,0), tasa=0.01){
+  N= dim(datos)[1]
+  diferencia = 1
+
+  while(diferencia > 0.01){
+  gradientelog=0
+  sumagradiente=0
+  permutacion = sample(1:N,N,replace=FALSE)
+  for(i in 1:N){
+    indice = permutacion[i]
+    numerador = etiqueta[indice]%*%datos[indice,]
+    denominador = 1+exp(etiqueta[indice]%*%(datos[indice,]%*%vector_w_ini))
+    gradientelog = numerador/denominador[1,1]
+    sumagradiente = sumagradiente + gradientelog
+  }
+  vector_w = vector_w_ini + tasa*sumagradiente
+  vector_w = as.numeric(vector_w)
+  diferencia = sqrt(sum((vector_w_ini-vector_w)^2))
+  vector_w_ini = vector_w
+  }
+  return(vector_w)
 }
-reglog(matriz_datos=datos, etiquetas=etiqueta)
+vector_final = reglog(datos=datos, etiqueta=etiqueta)
 
-numerador = etiqueta%*%datos
-denominador = 1+exp(etiqueta%*%(datos%*%vector_w))
-gradientelog = -(numerador/denominador[1,1])/(dim(datos)[1])
+#Obtener g
+
+#Obtener Eout
+nuevos_datos = simula_unifM (N,2,rango)
+nuevos_coef = simula_recta(rango) 
+nueva_f4 = function(pto,coef) {          #funcion de la recta
+  pto[2]-pto[1]*coef[1]-coef[2]
+}
+nuevo_z0 = apply(nuevos_datos,1,f4,nuevos_coef)        #obtiene los valores de la funcion para datos
+nueva_etiqueta = sign(nuevo_z0)                # apartir de ellos crea las etiquetas
+
+error=0
+resulparcial=0
+for(i in 1:N){
+    resulparcial=log(1+exp(-nueva_etiqueta[i]%*%(nuevos_datos[i,]%*%vector_final)))
+    error = error + resulparcial
+}
+error=error/N
+print("Error obtenido:")
+print(error)
