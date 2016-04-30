@@ -341,5 +341,28 @@ abline( a=-hiperplanow[1,]/hiperplanow[3,],
 
 
 #Apartado b:
+#Para datos_train:
+coefw = c(-hiperplanow[1,]/hiperplanow[3,],-hiperplanow[2,]/hiperplanow[3,]) 
+f4 = function(pto,coefw) {          #funcion de la recta
+  pto[2]-pto[1]*coefw[2]-coefw[1]
+}
+z0trainfin = apply(datos_train,1,f4,coefw)        #obtiene los valores de la funcion para datos
+etiquetas_train_fin = sign(z0trainfin)                # apartir de ellos crea las etiquetas
+for(i in 1:length(etiquetas_train_fin)){
+  if(etiquetas_train_fin[i] == -1)
+    etiquetas_train_fin[i] =5
+}
+distintas_train = length(which(etiquetas_train_fin!=etiquetas_digitos_train))
+Ein_train = (distintas_train*100)/nrow(datos_train)
 
+#Para datos_test:
+z0testfin = apply(datos_test,1,f4,coefw)        #obtiene los valores de la funcion para datos
+etiquetas_test_fin = sign(z0testfin)                # apartir de ellos crea las etiquetas
+for(i in 1:length(etiquetas_test_fin)){
+  if(etiquetas_test_fin[i] == -1)
+    etiquetas_test_fin[i] =5
+}
+distintas_test = length(which(etiquetas_test_fin!=etiquetas_digitos_test))
+Ein_test = (distintas_test*100)/nrow(datos_test)
 
+#Apartado c:
