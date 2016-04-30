@@ -1,0 +1,489 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={prac2.R},
+            pdfauthor={Cris},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{prac2.R}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Cris}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{Sat Apr 30 01:50:52 2016}
+
+
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{#######################################################################}
+\NormalTok{################## Cristina Zuheros Montes - 2016 #####################}
+\NormalTok{#######################################################################}
+
+\CommentTok{#Funcion auxiliar para ir parado la ejecucion}
+\NormalTok{pulsaTecla <-}\StringTok{ }\NormalTok{function()\{}
+  \KeywordTok{cat} \NormalTok{(}\StringTok{"Pulse Intro para continuar..."}\NormalTok{)}
+  \NormalTok{line <-}\StringTok{ }\KeywordTok{readline}\NormalTok{()}
+\NormalTok{\}}
+
+\NormalTok{pintar_grafica =}\StringTok{ }\NormalTok{function(f) \{}
+  \NormalTok{x=y=}\KeywordTok{seq}\NormalTok{(-}\DecValTok{50}\NormalTok{,}\DecValTok{50}\NormalTok{,}\DataTypeTok{by=}\FloatTok{0.1}\NormalTok{)}
+  \NormalTok{z =}\StringTok{ }\KeywordTok{outer}\NormalTok{(x,y,}\DataTypeTok{FUN=}\NormalTok{f)}
+  \KeywordTok{contour}\NormalTok{(x,y,z, }\DataTypeTok{levels=}\DecValTok{0}\NormalTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{drawlabels =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{col=}\StringTok{"purple"}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{simula_unifM =}\StringTok{ }\NormalTok{function (}\DataTypeTok{N=}\DecValTok{2}\NormalTok{,}\DataTypeTok{dims=}\DecValTok{2}\NormalTok{, }\DataTypeTok{rango =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))\{}
+  \NormalTok{m =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{runif}\NormalTok{(N*dims, }\DataTypeTok{min=}\NormalTok{rango[}\DecValTok{1}\NormalTok{], }\DataTypeTok{max=}\NormalTok{rango[}\DecValTok{2}\NormalTok{]),}
+             \DataTypeTok{nrow =} \NormalTok{N, }\DataTypeTok{ncol=}\NormalTok{dims, }\DataTypeTok{byrow=}\NormalTok{T)}
+\NormalTok{\}}
+
+\NormalTok{simula_recta =}\StringTok{ }\NormalTok{function (}\DataTypeTok{intervalo =} \KeywordTok{c}\NormalTok{(-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{visible=}\NormalTok{F, }\DataTypeTok{ptos =} \OtherTok{NULL}\NormalTok{)\{}
+  \NormalTok{if(}\KeywordTok{is.null}\NormalTok{(ptos)) m =}\StringTok{ }\KeywordTok{simula_unifM}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,intervalo)}
+  \NormalTok{a =}\StringTok{ }\NormalTok{(m[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{] -}\StringTok{ }\NormalTok{m[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{]) /}\StringTok{ }\NormalTok{(m[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]-m[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{]) }\CommentTok{# calculo de la pendiente}
+  \NormalTok{b =}\StringTok{ }\NormalTok{m[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{]-a*m[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+  \NormalTok{if (visible) \{}
+  \CommentTok{#  if (dev.cur()==1) # no esta abierto el dispositivo lo abre con plot}
+    \KeywordTok{plot}\NormalTok{(}\OtherTok{NULL}\NormalTok{, }\OtherTok{NULL}\NormalTok{, }\DataTypeTok{type=}\StringTok{"n"}\NormalTok{, }\DataTypeTok{xlim=}\NormalTok{intervalo, }\DataTypeTok{ylim=}\NormalTok{intervalo)}
+    \KeywordTok{abline}\NormalTok{(b,a)}
+    \KeywordTok{points}\NormalTok{(m,}\DataTypeTok{col=}\DecValTok{3}\NormalTok{) }\CommentTok{#pinta en verde los puntos}
+  \NormalTok{\}}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{c}\NormalTok{(a,b))}
+\NormalTok{\}}
+
+\NormalTok{pinta_puntos =}\StringTok{ }\NormalTok{function(m,}\DataTypeTok{intervalo =} \KeywordTok{c}\NormalTok{(-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{) ,}\DataTypeTok{etiqueta=}\DecValTok{1}\NormalTok{)\{}
+  \NormalTok{nptos=}\KeywordTok{nrow}\NormalTok{(m)}
+  \KeywordTok{plot}\NormalTok{(m,}\DataTypeTok{xlim=}\NormalTok{intervalo, }\DataTypeTok{ylim =} \NormalTok{intervalo, }\DataTypeTok{xlab=}\KeywordTok{paste}\NormalTok{(}\StringTok{"Pinta "}\NormalTok{,nptos,}\StringTok{" Puntos"}\NormalTok{), }\DataTypeTok{ylab=}\StringTok{""}\NormalTok{,}\DataTypeTok{col=}\NormalTok{etiqueta}\DecValTok{+3}\NormalTok{)}
+\NormalTok{\}}
+\NormalTok{########################################################################}
+\NormalTok{############################### SECCION 1 ##############################}
+\NormalTok{########################################################################}
+\KeywordTok{print}\NormalTok{(}\StringTok{"###############################SECCION 1###################################"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "###############################SECCION 1###################################"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{###################################################}
+\NormalTok{###################EJERCICIO 1.1###################}
+\NormalTok{###################################################}
+\KeywordTok{print}\NormalTok{(}\StringTok{"###############################Ejercicio 1###################################"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "###############################Ejercicio 1###################################"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fs1e1f1 =}\StringTok{ }\NormalTok{function(x,y) ((x*}\KeywordTok{exp}\NormalTok{(y))-}\StringTok{ }\NormalTok{(}\DecValTok{2}\NormalTok{*y*}\KeywordTok{exp}\NormalTok{(-x)))^}\DecValTok{2}  \CommentTok{#defino la funcion}
+\NormalTok{fs1e1f2 =}\StringTok{ }\NormalTok{function(x,y) x^}\DecValTok{2} \NormalTok{+}\StringTok{  }\DecValTok{2}\NormalTok{*y^}\DecValTok{2} \NormalTok{+}\DecValTok{2}\NormalTok{*}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\NormalTok{*pi*x)*}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\NormalTok{*pi*y)  }\CommentTok{#defino la funcion}
+
+\NormalTok{graddesc =}\StringTok{ }\NormalTok{function(}
+  \DataTypeTok{FUN =} \NormalTok{function(x, y) ((x*}\KeywordTok{exp}\NormalTok{(y))-}\StringTok{ }\NormalTok{(}\DecValTok{2}\NormalTok{*y*}\KeywordTok{exp}\NormalTok{(-x)))^}\DecValTok{2}\NormalTok{, }\DataTypeTok{interx =} \KeywordTok{c}\NormalTok{(-}\FloatTok{1.25}\NormalTok{, }\FloatTok{1.25}\NormalTok{), }\DataTypeTok{intery=}\KeywordTok{c}\NormalTok{(-}\FloatTok{1.25}\NormalTok{,}\FloatTok{1.25}\NormalTok{),}
+  \DataTypeTok{val_ini=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{tasa=}\FloatTok{0.01}\NormalTok{, }\DataTypeTok{tope =} \DecValTok{10}\NormalTok{^(-}\DecValTok{14}\NormalTok{), }\DataTypeTok{mimain=}\StringTok{""}\NormalTok{, }\DataTypeTok{maxiter=}\DecValTok{200}\NormalTok{)\{}
+    \KeywordTok{plot}\NormalTok{(}\OtherTok{NULL}\NormalTok{,}\OtherTok{NULL}\NormalTok{, }\DataTypeTok{xlim =} \NormalTok{interx, }\DataTypeTok{ylim=}\NormalTok{intery, }\DataTypeTok{xlab=}\StringTok{"x"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"y"}\NormalTok{, }\DataTypeTok{main =} \NormalTok{mimain)}
+    \KeywordTok{pintar_grafica}\NormalTok{(FUN)}
+    \NormalTok{coste_funcion=}\KeywordTok{FUN}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{], val_ini[}\DecValTok{2}\NormalTok{])}
+    \NormalTok{contador=}\DecValTok{0}
+    \NormalTok{while(coste_funcion>tope &&}\StringTok{ }\NormalTok{contador<maxiter)\{}
+      \NormalTok{dxy_fs1e1 =}\StringTok{ }\KeywordTok{deriv}\NormalTok{(}\KeywordTok{as.expression}\NormalTok{(}\KeywordTok{body}\NormalTok{(FUN)), }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{,}\StringTok{"y"}\NormalTok{), }\DataTypeTok{function.arg=}\OtherTok{TRUE}\NormalTok{)}
+      \NormalTok{val_sig =}\StringTok{ }\NormalTok{val_ini -}\StringTok{ }\NormalTok{tasa*}\KeywordTok{attr}\NormalTok{(}\KeywordTok{dxy_fs1e1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'gradient'}\NormalTok{)}
+      \NormalTok{coste_funcion =}\StringTok{ }\KeywordTok{FUN}\NormalTok{(val_sig[}\DecValTok{1}\NormalTok{], val_sig[}\DecValTok{2}\NormalTok{])}
+      \NormalTok{val_ini =}\StringTok{ }\NormalTok{val_sig}
+      \NormalTok{contador=contador}\DecValTok{+1}
+      \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{)}
+    \NormalTok{\}}
+    \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+    \KeywordTok{print}\NormalTok{(}\StringTok{"Numero de iteraciones realizadas:"}\NormalTok{)}
+    \KeywordTok{print}\NormalTok{(contador)}
+    \KeywordTok{print}\NormalTok{(}\StringTok{"Valor obtenido:"}\NormalTok{)}
+    \KeywordTok{print}\NormalTok{(val_ini)}
+\NormalTok{\}}
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************Primera funcion*************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************Primera funcion*************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graddesc(mimain="1.1.a)Primera funcion", interx = c(-2,2), intery=c(-2,2), tasa=0.1)}
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************Segunda funcion*************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************Segunda funcion*************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************Inicial (1,1)*************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************Inicial (1,1)*************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1)", maxiter=50)}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************Inicial (-1,-1)***********************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************Inicial (-1,-1)***********************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graddesc(FUN = fs1e1f2, val_ini=c(-1,-1),mimain="1.1.b)Segunda funcion (-1,-1)", maxiter=50)}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"***********************Inicial (0.1,0.1)************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "***********************Inicial (0.1,0.1)************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graddesc(FUN = fs1e1f2, val_ini=c(0.1,0.1),mimain="1.1.b)Segunda funcion (0.1,0.1)", maxiter=50)}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"**********************Inicial (-0.5,-0.5)***********************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "**********************Inicial (-0.5,-0.5)***********************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#graddesc(FUN = fs1e1f2, val_ini=c(-0.5,-0.5),mimain="1.1.b)Segunda funcion (-0.5,-0.5)", maxiter=50)}
+
+\NormalTok{###################################################}
+\NormalTok{###################EJERCICIO 1.2###################}
+\NormalTok{###################################################}
+\KeywordTok{print}\NormalTok{(}\StringTok{"###############################Ejercicio 2###################################"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "###############################Ejercicio 2###################################"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coorddesc =}\StringTok{ }\NormalTok{function(}
+  \DataTypeTok{FUN =} \NormalTok{function(x, y) ((x*}\KeywordTok{exp}\NormalTok{(y))-}\StringTok{ }\NormalTok{(}\DecValTok{2}\NormalTok{*y*}\KeywordTok{exp}\NormalTok{(-x)))^}\DecValTok{2}\NormalTok{, }\DataTypeTok{interx =} \KeywordTok{c}\NormalTok{(-}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DataTypeTok{intery=}\KeywordTok{c}\NormalTok{(-}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{),}
+  \DataTypeTok{val_ini=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{tasa=}\FloatTok{0.1}\NormalTok{, }\DataTypeTok{tope =} \DecValTok{10}\NormalTok{^(-}\DecValTok{14}\NormalTok{), }\DataTypeTok{mimain=}\StringTok{""}\NormalTok{, }\DataTypeTok{maxiter=}\DecValTok{15}\NormalTok{)\{}
+  \KeywordTok{plot}\NormalTok{(}\OtherTok{NULL}\NormalTok{,}\OtherTok{NULL}\NormalTok{, }\DataTypeTok{xlim =} \NormalTok{interx, }\DataTypeTok{ylim=}\NormalTok{intery, }\DataTypeTok{xlab=}\StringTok{"x"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"y"}\NormalTok{, }\DataTypeTok{main =} \NormalTok{mimain)}
+  \KeywordTok{pintar_grafica}\NormalTok{(FUN)}
+  \NormalTok{coste_funcion=}\KeywordTok{FUN}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{], val_ini[}\DecValTok{2}\NormalTok{])}
+  \NormalTok{contador=}\DecValTok{0}
+  \NormalTok{val_sig =}\StringTok{ }\NormalTok{val_ini}
+  \NormalTok{while(coste_funcion>tope &&}\StringTok{ }\NormalTok{contador<maxiter)\{}
+    \NormalTok{dxy_fs1e1 =}\StringTok{ }\KeywordTok{deriv}\NormalTok{(}\KeywordTok{as.expression}\NormalTok{(}\KeywordTok{body}\NormalTok{(FUN)), }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{,}\StringTok{"y"}\NormalTok{), }\DataTypeTok{function.arg=}\OtherTok{TRUE}\NormalTok{)}
+    \NormalTok{val_sig[}\DecValTok{1}\NormalTok{] =}\StringTok{ }\NormalTok{val_ini[}\DecValTok{1}\NormalTok{] -}\StringTok{ }\NormalTok{tasa*(}\KeywordTok{attr}\NormalTok{(}\KeywordTok{dxy_fs1e1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'gradient'}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+    \NormalTok{val_sig[}\DecValTok{2}\NormalTok{] =}\StringTok{ }\NormalTok{val_ini[}\DecValTok{2}\NormalTok{] -}\StringTok{ }\NormalTok{tasa*(}\KeywordTok{attr}\NormalTok{(}\KeywordTok{dxy_fs1e1}\NormalTok{(val_sig[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'gradient'}\NormalTok{))[}\DecValTok{2}\NormalTok{]}
+    \NormalTok{coste_funcion =}\StringTok{ }\KeywordTok{FUN}\NormalTok{(val_sig[}\DecValTok{1}\NormalTok{], val_sig[}\DecValTok{2}\NormalTok{])}
+    \NormalTok{val_ini =}\StringTok{ }\NormalTok{val_sig}
+    \NormalTok{contador=contador}\DecValTok{+1}
+    \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{)}
+  \NormalTok{\}}
+  \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"Numero de iteraciones realizadas:"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(contador)}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"Valor obtenido:"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(val_ini)}
+\NormalTok{\}}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************15 Iteraciones*************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************15 Iteraciones*************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#coorddesc(mimain="1.2. 15 Iteraciones.")}
+\KeywordTok{print}\NormalTok{(}\StringTok{"*************************30 Iteraciones*************************"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "*************************30 Iteraciones*************************"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#coorddesc(maxiter=30, mimain="1.2. 30 Iteraciones.")}
+
+\NormalTok{###################################################}
+\NormalTok{###################EJERCICIO 1.3###################}
+\NormalTok{###################################################}
+\KeywordTok{print}\NormalTok{(}\StringTok{"###############################Ejercicio 3###################################"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "###############################Ejercicio 3###################################"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{newton =}\StringTok{ }\NormalTok{function(}
+  \DataTypeTok{FUN =} \NormalTok{function(x, y) x^}\DecValTok{2} \NormalTok{+}\StringTok{  }\DecValTok{2}\NormalTok{*y^}\DecValTok{2} \NormalTok{+}\DecValTok{2}\NormalTok{*}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\NormalTok{*pi*x)*}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\NormalTok{*pi*y), }\DataTypeTok{interx =} \KeywordTok{c}\NormalTok{(-}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DataTypeTok{intery=}\KeywordTok{c}\NormalTok{(-}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{),}
+  \DataTypeTok{val_ini=}\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)), }\DataTypeTok{tasa=}\FloatTok{0.1}\NormalTok{, }\DataTypeTok{tope =} \FloatTok{0.00001}\NormalTok{, }\DataTypeTok{mimain=}\StringTok{""}\NormalTok{, }\DataTypeTok{maxiter=}\DecValTok{15}\NormalTok{)\{}
+
+  \KeywordTok{plot}\NormalTok{(}\OtherTok{NULL}\NormalTok{,}\OtherTok{NULL}\NormalTok{, }\DataTypeTok{xlim =} \NormalTok{interx, }\DataTypeTok{ylim=}\NormalTok{intery, }\DataTypeTok{xlab=}\StringTok{"x"}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{"y"}\NormalTok{, }\DataTypeTok{main =} \NormalTok{mimain)}
+  \KeywordTok{pintar_grafica}\NormalTok{(FUN)}
+  \NormalTok{val_ini =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)) }
+  \NormalTok{coste_funcion=}\KeywordTok{FUN}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{], val_ini[}\DecValTok{2}\NormalTok{])}
+  \NormalTok{contador=}\DecValTok{0}
+  \NormalTok{val_sig =}\StringTok{ }\NormalTok{val_ini}
+  \NormalTok{diferencia_coste =}\StringTok{ }\DecValTok{200}
+  \NormalTok{while(diferencia_coste>tope &&}\StringTok{ }\NormalTok{contador<maxiter)\{}
+    \NormalTok{hess_fs1e1f1 =}\StringTok{ }\KeywordTok{deriv}\NormalTok{(}\KeywordTok{as.expression}\NormalTok{(}\KeywordTok{body}\NormalTok{(FUN)), }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{,}\StringTok{"y"}\NormalTok{), }\DataTypeTok{hessian=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{function.arg=}\OtherTok{TRUE}\NormalTok{)}
+    \NormalTok{hessiana_fs1e1f1 =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'hessian'}\NormalTok{))[}\DecValTok{1}\NormalTok{],}
+                                         \NormalTok{(}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'hessian'}\NormalTok{))[}\DecValTok{2}\NormalTok{]),}
+                                       \KeywordTok{c}\NormalTok{((}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'hessian'}\NormalTok{))[}\DecValTok{3}\NormalTok{],}
+                                         \NormalTok{(}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'hessian'}\NormalTok{))[}\DecValTok{4}\NormalTok{])))}
+    \NormalTok{gradiente_fs1e1f1 =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{rbind}\NormalTok{((}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'grad'}\NormalTok{))[}\DecValTok{1}\NormalTok{],}
+                                        \NormalTok{(}\KeywordTok{attr}\NormalTok{(}\KeywordTok{hess_fs1e1f1}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{],val_ini[}\DecValTok{2}\NormalTok{]), }\StringTok{'grad'}\NormalTok{))[}\DecValTok{2}\NormalTok{]))}
+    \NormalTok{hessiana_fs1e1f1 =}\StringTok{ }\KeywordTok{solve}\NormalTok{(hessiana_fs1e1f1)}
+
+    \NormalTok{val_sig =}\StringTok{ }\NormalTok{val_ini -hessiana_fs1e1f1%*%gradiente_fs1e1f1}
+    \NormalTok{diferencia_coste =}\StringTok{ }\KeywordTok{abs}\NormalTok{(}\KeywordTok{FUN}\NormalTok{(val_sig[}\DecValTok{1}\NormalTok{], val_sig[}\DecValTok{2}\NormalTok{]) -}\StringTok{ }\KeywordTok{FUN}\NormalTok{(val_ini[}\DecValTok{1}\NormalTok{], val_ini[}\DecValTok{2}\NormalTok{]))}
+    \NormalTok{val_ini =}\StringTok{ }\NormalTok{val_sig}
+    \NormalTok{contador=contador}\DecValTok{+1}
+    \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{)}
+    \KeywordTok{print}\NormalTok{(}\KeywordTok{FUN}\NormalTok{(val_sig[}\DecValTok{1}\NormalTok{], val_sig[}\DecValTok{2}\NormalTok{]))}
+  \NormalTok{\}}
+  \KeywordTok{points}\NormalTok{(val_sig, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"Numero de iteraciones realizadas:"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(contador)}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"Valor obtenido:"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(val_sig)}
+\NormalTok{\}}
+
+\CommentTok{#newton()}
+
+\NormalTok{###################################################}
+\NormalTok{###################EJERCICIO 1.4###################}
+\NormalTok{###################################################}
+\KeywordTok{print}\NormalTok{(}\StringTok{"###############################Ejercicio 4###################################"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "###############################Ejercicio 4###################################"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{N=}\DecValTok{100}
+\NormalTok{rango =}\StringTok{ }\KeywordTok{c}\NormalTok{(-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\NormalTok{datos =}\StringTok{ }\KeywordTok{simula_unifM} \NormalTok{(N,}\DecValTok{2}\NormalTok{,rango)}
+\NormalTok{coef =}\StringTok{ }\KeywordTok{simula_recta}\NormalTok{(rango) }
+\NormalTok{f4 =}\StringTok{ }\NormalTok{function(pto,coef) \{          }\CommentTok{#funcion de la recta}
+  \NormalTok{pto[}\DecValTok{2}\NormalTok{]-pto[}\DecValTok{1}\NormalTok{]*coef[}\DecValTok{1}\NormalTok{]-coef[}\DecValTok{2}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{z0 =}\StringTok{ }\KeywordTok{apply}\NormalTok{(datos,}\DecValTok{1}\NormalTok{,f4,coef)        }\CommentTok{#obtiene los valores de la funcion para datos}
+\NormalTok{etiqueta =}\StringTok{ }\KeywordTok{sign}\NormalTok{(z0)                }\CommentTok{# apartir de ellos crea las etiquetas}
+\CommentTok{#pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas }
+\CommentTok{#abline(coef[2],coef[1])            # pinta la recta}
+
+
+\NormalTok{tasa =}\StringTok{ }\FloatTok{0.01}
+\NormalTok{vector_w_ini=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{) }
+
+\NormalTok{reglog =}\StringTok{ }\NormalTok{function(datos,etiqueta,}\DataTypeTok{vector_w_ini=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{), }\DataTypeTok{tasa=}\FloatTok{0.01}\NormalTok{)\{}
+  \NormalTok{N=}\StringTok{ }\KeywordTok{dim}\NormalTok{(datos)[}\DecValTok{1}\NormalTok{]}
+  \NormalTok{diferencia =}\StringTok{ }\DecValTok{1}
+
+  \NormalTok{while(diferencia >}\StringTok{ }\FloatTok{0.01}\NormalTok{)\{}
+  \NormalTok{gradientelog=}\DecValTok{0}
+  \NormalTok{sumagradiente=}\DecValTok{0}
+  \NormalTok{permutacion =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\NormalTok{:N,N,}\DataTypeTok{replace=}\OtherTok{FALSE}\NormalTok{)}
+  \NormalTok{for(i in }\DecValTok{1}\NormalTok{:N)\{}
+    \NormalTok{indice =}\StringTok{ }\NormalTok{permutacion[i]}
+    \NormalTok{numerador =}\StringTok{ }\NormalTok{etiqueta[indice]%*%datos[indice,]}
+    \NormalTok{denominador =}\StringTok{ }\DecValTok{1}\NormalTok{+}\KeywordTok{exp}\NormalTok{(etiqueta[indice]%*%(datos[indice,]%*%vector_w_ini))}
+    \NormalTok{gradientelog =}\StringTok{ }\NormalTok{numerador/denominador[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+    \NormalTok{sumagradiente =}\StringTok{ }\NormalTok{sumagradiente +}\StringTok{ }\NormalTok{gradientelog}
+  \NormalTok{\}}
+  \NormalTok{vector_w =}\StringTok{ }\NormalTok{vector_w_ini +}\StringTok{ }\NormalTok{tasa*sumagradiente}
+  \NormalTok{vector_w =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(vector_w)}
+  \NormalTok{diferencia =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{sum}\NormalTok{((vector_w_ini-vector_w)^}\DecValTok{2}\NormalTok{))}
+  \NormalTok{vector_w_ini =}\StringTok{ }\NormalTok{vector_w}
+  \NormalTok{\}}
+  \KeywordTok{return}\NormalTok{(vector_w)}
+\NormalTok{\}}
+\NormalTok{vector_final =}\StringTok{ }\KeywordTok{reglog}\NormalTok{(}\DataTypeTok{datos=}\NormalTok{datos, }\DataTypeTok{etiqueta=}\NormalTok{etiqueta)}
+
+\CommentTok{#Obtener g}
+
+\CommentTok{#Obtener Eout}
+\NormalTok{nuevos_datos =}\StringTok{ }\KeywordTok{simula_unifM} \NormalTok{(N,}\DecValTok{2}\NormalTok{,rango)}
+\NormalTok{nuevos_coef =}\StringTok{ }\KeywordTok{simula_recta}\NormalTok{(rango) }
+\NormalTok{nueva_f4 =}\StringTok{ }\NormalTok{function(pto,coef) \{          }\CommentTok{#funcion de la recta}
+  \NormalTok{pto[}\DecValTok{2}\NormalTok{]-pto[}\DecValTok{1}\NormalTok{]*coef[}\DecValTok{1}\NormalTok{]-coef[}\DecValTok{2}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{nuevo_z0 =}\StringTok{ }\KeywordTok{apply}\NormalTok{(nuevos_datos,}\DecValTok{1}\NormalTok{,f4,nuevos_coef)        }\CommentTok{#obtiene los valores de la funcion para datos}
+\NormalTok{nueva_etiqueta =}\StringTok{ }\KeywordTok{sign}\NormalTok{(nuevo_z0)                }\CommentTok{# apartir de ellos crea las etiquetas}
+
+\NormalTok{error=}\DecValTok{0}
+\NormalTok{resulparcial=}\DecValTok{0}
+\NormalTok{for(i in }\DecValTok{1}\NormalTok{:N)\{}
+    \NormalTok{resulparcial=}\KeywordTok{log}\NormalTok{(}\DecValTok{1}\NormalTok{+}\KeywordTok{exp}\NormalTok{(-nueva_etiqueta[i]%*%(nuevos_datos[i,]%*%vector_final)))}
+    \NormalTok{error =}\StringTok{ }\NormalTok{error +}\StringTok{ }\NormalTok{resulparcial}
+\NormalTok{\}}
+\NormalTok{error=error/N}
+\KeywordTok{print}\NormalTok{(}\StringTok{"Error obtenido:"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Error obtenido:"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(error)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           [,1]
+## [1,] 0.4623543
+\end{verbatim}
+
+\end{document}

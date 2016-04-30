@@ -2,6 +2,9 @@
 ################## Cristina Zuheros Montes - 2016 #####################
 #######################################################################
 
+########################################################################
+############################## AUXILIARES ##############################
+########################################################################
 #Funcion auxiliar para ir parado la ejecucion
 pulsaTecla <- function(){
   cat ("Pulse Intro para continuar...")
@@ -35,6 +38,73 @@ simula_recta = function (intervalo = c(-1,1),visible=F, ptos = NULL){
 pinta_puntos = function(m,intervalo = c(-1,1) ,etiqueta=1){
   nptos=nrow(m)
   plot(m,xlim=intervalo, ylim = intervalo, xlab=paste("Pinta ",nptos," Puntos"), ylab="",col=etiqueta+3)
+}
+
+fsimetria1 <- function(A){
+  A = abs(A-A[,ncol(A):1])
+  -sum(A)
+}
+
+
+fsimetria2 <- function(A){
+  A = abs(A-A[nrow(A):1,])
+  -sum(A)
+}
+
+regresionlineal <- function(MatrizDatos, Etiquetas){
+  for(i in 1:length(Etiquetas)){
+    if(Etiquetas[i] == 5)
+      Etiquetas[i] =-1
+  }
+  d = dim(MatrizDatos)
+  MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
+  
+  X = MatrizDatos
+  sv = svd(t(X)%*%X)
+  U = sv$u
+  D = diag(sv$d)
+  V = sv$v
+  
+  XtraX_inv = V%*%solve(D)%*%t(V)
+  Xpseudo = XtraX_inv%*%t(X)
+  #Obtengo w:
+  w = Xpseudo%*%Etiquetas
+  return(w)
+}
+
+PLA_pocket <- function(datos, label, max_iter=50, vini){
+  for(i in 1:length(label)){
+    if(label[i] == 5)
+      label[i] =-1
+  }
+  d = dim(datos)
+  datos = cbind(rep(1,d[1]), datos)
+  contador = 0
+  mejorvini=vini
+  mejorbuenas=length(label)
+  indexa=NULL
+  while(contador<max_iter){
+    H = sign(datos%*%vini)
+    indexa = which(H!=label) #Guarda los indices de los que son distintos
+    if(length(indexa)!=0){
+      if(contador!=0){
+      i = sample(indexa, 1)
+      vini = vini + datos[i,]*label[i]
+      }else{
+        mejorbuenas = length(indexa)
+      }
+      if(length(which(sign(datos%*%vini)!=label))<mejorbuenas){
+        H = sign(datos%*%vini)
+        indexa = which(H!=label) #Guarda los indices de los que son distintos
+        mejorvini=vini
+        mejorbuenas=length(indexa)
+      }
+    }else{
+       return(mejorvini)
+    }
+    contador= contador+1
+  }
+  return(mejorvini)
 }
 ########################################################################
 ############################### SECCION 1 ##############################
@@ -221,3 +291,55 @@ for(i in 1:N){
 error=error/N
 print("Error obtenido:")
 print(error)
+
+###################################################
+###################EJERCICIO 1.5###################
+###################################################
+#Datos train
+digit.train <- read.table("datos/zip.train", header=FALSE)
+digitos15.train = digit.train[digit.train$V1==1 | digit.train$V1==5,]
+etiquetas_digitos_train = digitos15.train[,1]
+ndigitos_train = nrow(digitos15.train)
+matriz_Digitos_train = array(unlist(subset(digitos15.train,select=-V1)),c(ndigitos_train,16,16))
+rm(digit.train)
+rm(digitos15.train)
+
+intensidad_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1, mean)
+simetria_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1,fsimetria1)
+datos_train = as.matrix(cbind(intensidad_train,simetria_train))
+#dev.off()
+plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
+     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
+
+#Regresion
+hiperplanow = regresionlineal(datos_train, etiquetas_digitos_train)
+hiperplanow = PLA_pocket(datos_train, etiquetas_digitos_train, vini=hiperplanow)
+abline( a=-hiperplanow[1,]/hiperplanow[3,],
+        b=-hiperplanow[2,]/hiperplanow[3,], 
+        col="orange")
+
+
+#Datos test
+digit.test <- read.table("datos/zip.test", header=FALSE)
+digitos15.test = digit.test[digit.test$V1==1 | digit.test$V1==5,]
+etiquetas_digitos_test = digitos15.test[,1]
+ndigitos_test = nrow(digitos15.test)
+matriz_Digitos_test = array(unlist(subset(digitos15.test,select=-V1)),c(ndigitos_test,16,16))
+rm(digit.test)
+rm(digitos15.test)
+
+intensidad_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1, mean)
+simetria_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1,fsimetria1)
+simetria_test=simetria_test #porque...
+datos_test = as.matrix(cbind(intensidad_test,simetria_test))
+#dev.off()
+plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
+    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
+abline( a=-hiperplanow[1,]/hiperplanow[3,],
+       b=-hiperplanow[2,]/hiperplanow[3,], 
+      col="orange")
+
+
+#Apartado b:
+
+

@@ -3,7 +3,7 @@
 
 ## ------------------------------------------------------------------------
 #set.seed(3)
-
+install.packages("knitr")
 ## ------------------------------------------------------------------------
 simula_unifM = function (N=2,dims=2, rango = c(0,1)){
  m = matrix(runif(N*dims, min=rango[1], max=rango[2]),
@@ -53,8 +53,8 @@ pinta_puntos = function(m, rangox = NULL, rangoy = NULL ,etiqueta=NULL){
 }
 
 
-## ------------------------------------------------------------------------
-# Solucion del apartado 1 ejercicio 6 
+## -----------------------------------------------------------------------
+## Solucion del apartado 1 ejercicio 6 
 N=50
 rango=-50:50
 datos = simula_unifM (N,2,rango)
