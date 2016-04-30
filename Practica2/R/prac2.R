@@ -141,8 +141,10 @@ graddesc = function(
 print("*************************Primera funcion*************************")
 #graddesc(mimain="1.1.a)Primera funcion", interx = c(-2,2), intery=c(-2,2), tasa=0.1)
 print("*************************Segunda funcion*************************")
-print("*************************Inicial (1,1)*************************")
-#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1)", maxiter=50)
+print("*************************Inicial (1,1)0.01*************************")
+#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.01", maxiter=50)
+print("*************************Inicial (1,1) 0.1*************************")
+#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.1", maxiter=50, tasa=0.1)
 
 print("*************************Inicial (-1,-1)***********************")
 #graddesc(FUN = fs1e1f2, val_ini=c(-1,-1),mimain="1.1.b)Segunda funcion (-1,-1)", maxiter=50)
@@ -191,16 +193,16 @@ print("*************************30 Iteraciones*************************")
 ###################################################
 print("###############################Ejercicio 3###################################")
 newton = function(
-  FUN = function(x, y) x^2 +  2*y^2 +2*sin(2*pi*x)*sin(2*pi*y), interx = c(-3, 3), intery=c(-3,3),
+  FUN = function(x, y) x^2 +  2*y^2 +2*sin(2*pi*x)*sin(2*pi*y), interx = c(-2, 2), intery=c(-2,2),
   val_ini=as.matrix(rbind(1,1)), tasa=0.1, tope = 0.00001, mimain="", maxiter=15){
 
   plot(NULL,NULL, xlim = interx, ylim=intery, xlab="x", ylab="y", main = mimain)
   pintar_grafica(FUN)
-  val_ini = as.matrix(rbind(1,1)) 
   coste_funcion=FUN(val_ini[1], val_ini[2])
   contador=0
   val_sig = val_ini
   diferencia_coste = 200
+  valores = coste_funcion
   while(diferencia_coste>tope && contador<maxiter){
     hess_fs1e1f1 = deriv(as.expression(body(FUN)), c("x","y"), hessian=TRUE, function.arg=TRUE)
     hessiana_fs1e1f1 = as.matrix(rbind(c((attr(hess_fs1e1f1(val_ini[1],val_ini[2]), 'hessian'))[1],
@@ -215,17 +217,19 @@ newton = function(
     diferencia_coste = abs(FUN(val_sig[1], val_sig[2]) - FUN(val_ini[1], val_ini[2]))
     val_ini = val_sig
     contador=contador+1
-    points(val_sig, col="orange")
     print(FUN(val_sig[1], val_sig[2]))
+    valores =c(valores, FUN(val_sig[1], val_sig[2]))
   }
-  points(val_sig, col="red")
+  points((val_sig[1]:val_sig[2]), col="red")
   print("Numero de iteraciones realizadas:")
   print(contador)
   print("Valor obtenido:")
   print(val_sig)
+  iteraciones = 1:(contador+1)
+  plot(x=iteraciones, y=valores, col="purple")
 }
 
-#newton()
+newton()
 
 ###################################################
 ###################EJERCICIO 1.4###################
@@ -308,15 +312,15 @@ intensidad_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1, mean)
 simetria_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1,fsimetria1)
 datos_train = as.matrix(cbind(intensidad_train,simetria_train))
 #dev.off()
-plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
-     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
+#plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
+##     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
 
 #Regresion
 hiperplanow = regresionlineal(datos_train, etiquetas_digitos_train)
 hiperplanow = PLA_pocket(datos_train, etiquetas_digitos_train, vini=hiperplanow)
-abline( a=-hiperplanow[1,]/hiperplanow[3,],
-        b=-hiperplanow[2,]/hiperplanow[3,], 
-        col="orange")
+##abline( a=-hiperplanow[1,]/hiperplanow[3,],
+##        b=-hiperplanow[2,]/hiperplanow[3,], 
+#        col="orange")
 
 
 #Datos test
@@ -333,11 +337,11 @@ simetria_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1,fsimetria1)
 simetria_test=simetria_test #porque...
 datos_test = as.matrix(cbind(intensidad_test,simetria_test))
 #dev.off()
-plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
-    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
-abline( a=-hiperplanow[1,]/hiperplanow[3,],
-       b=-hiperplanow[2,]/hiperplanow[3,], 
-      col="orange")
+#plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
+#    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
+#abline( a=-hiperplanow[1,]/hiperplanow[3,],
+#       b=-hiperplanow[2,]/hiperplanow[3,], 
+#      col="orange")
 
 
 #Apartado b:
