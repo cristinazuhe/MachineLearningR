@@ -229,7 +229,7 @@ newton = function(
   plot(x=iteraciones, y=valores, col="purple")
 }
 
-newton()
+#newton()
 
 ###################################################
 ###################EJERCICIO 1.4###################
@@ -244,56 +244,54 @@ f4 = function(pto,coef) {          #funcion de la recta
 }
 z0 = apply(datos,1,f4,coef)        #obtiene los valores de la funcion para datos
 etiqueta = sign(z0)                # apartir de ellos crea las etiquetas
-#pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
-#abline(coef[2],coef[1])            # pinta la recta
-
+pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
+abline(coef[2],coef[1])            # pinta la recta
 
 tasa = 0.01
-vector_w_ini=c(0,0) 
+vector_w_ini=c(0,0,0) 
 
-reglog = function(datos,etiqueta,vector_w_ini=c(0,0), tasa=0.01){
+reglog = function(datos,etiqueta,vector_w_ini=c(0,0,0), tasa=0.01){
   N= dim(datos)[1]
   diferencia = 1
-
-  while(diferencia > 0.01){
-  gradientelog=0
-  sumagradiente=0
+  w = vector_w_ini
+  d = dim(datos)
+  datos = cbind(rep(1,d[1]), datos)
+  etiqueta = t(t(etiqueta))
+  contador=0
+  
+  while(diferencia > 0.01 && contador<100000){
+    vector_w = w
   permutacion = sample(1:N,N,replace=FALSE)
   for(i in 1:N){
     indice = permutacion[i]
-    numerador = etiqueta[indice]%*%datos[indice,]
-    denominador = 1+exp(etiqueta[indice]%*%(datos[indice,]%*%vector_w_ini))
-    gradientelog = numerador/denominador[1,1]
-    sumagradiente = sumagradiente + gradientelog
+    gradientelog = (-etiqueta[indice,]*datos[indice,])/(1+exp(etiqueta[indice,]*w%*%datos[indice,]))
+    w = w - tasa*gradientelog 
+    contador=contador+1
+    
   }
-  vector_w = vector_w_ini + tasa*sumagradiente
-  vector_w = as.numeric(vector_w)
-  diferencia = sqrt(sum((vector_w_ini-vector_w)^2))
-  vector_w_ini = vector_w
+  diferencia = sqrt(sum((w-vector_w)^2))
   }
-  return(vector_w)
+  print(w)
+  return(w)
 }
-vector_final = reglog(datos=datos, etiqueta=etiqueta)
 
+vector_final = reglog(datos=datos, etiqueta=etiqueta)
 #Obtener g
+a= -vector_final[2]/vector_final[3]
+b= -vector_final[1]/vector_final[3]
+curve(a*x + b, col="orange", add=T)
 
 #Obtener Eout
 nuevos_datos = simula_unifM (N,2,rango)
-nuevos_coef = simula_recta(rango) 
-nueva_f4 = function(pto,coef) {          #funcion de la recta
-  pto[2]-pto[1]*coef[1]-coef[2]
-}
-nuevo_z0 = apply(nuevos_datos,1,f4,nuevos_coef)        #obtiene los valores de la funcion para datos
-nueva_etiqueta = sign(nuevo_z0)                # apartir de ellos crea las etiquetas
+real_z0 = apply(nuevos_datos,1,f4,coef)        #obtiene los valores de la funcion para datos
+etiquetas_real = sign(real_z0)                # apartir de ellos crea las etiquetas
 
-error=0
-resulparcial=0
-for(i in 1:N){
-    resulparcial=log(1+exp(-nueva_etiqueta[i]%*%(nuevos_datos[i,]%*%vector_final)))
-    error = error + resulparcial
-}
-error=error/N
-print("Error obtenido:")
+coef_estimados = c(a,b)
+estimado_z0 = apply(nuevos_datos,1,f4,coef_estimados)
+etiquetas_estimadas = sign(estimado_z0)
+
+error=mean(etiquetas_real!=etiquetas_estimadas)
+print("Error obtenido regresion logistica:")
 print(error)
 
 ###################################################
