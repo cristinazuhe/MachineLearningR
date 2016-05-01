@@ -217,19 +217,25 @@ newton = function(
     diferencia_coste = abs(FUN(val_sig[1], val_sig[2]) - FUN(val_ini[1], val_ini[2]))
     val_ini = val_sig
     contador=contador+1
-    print(FUN(val_sig[1], val_sig[2]))
     valores =c(valores, FUN(val_sig[1], val_sig[2]))
   }
   points((val_sig[1]:val_sig[2]), col="red")
   print("Numero de iteraciones realizadas:")
-  print(contador)
-  print("Valor obtenido:")
+  print(contador+1)
+  print("Punto obtenido:")
   print(val_sig)
+  print("Valor alcanzado")
+  print(FUN(val_sig[1], val_sig[2]))
   iteraciones = 1:(contador+1)
-  plot(x=iteraciones, y=valores, col="purple")
+  plot(x=iteraciones, y=valores, col="purple", main="Descenso valor función.")
 }
 
-#newton()
+#print("Newton partiendo de (1,1)")
+#newton(mimain="Sec1 Ejer3 (1,1)")
+#print("Newton partiendo de (-1,-1)")
+#newton(val_ini=as.matrix(rbind(-1,-1)), mimain="Sec1 Ejer3 (-1,-1)")
+#print("Newton partiendo de (-0.5,-0.5)")
+#???newton(val_ini=as.matrix(rbind(-0.5,-0.5)), mimain="Sec1 Ejer3 (-0.5,-0.5)")
 
 ###################################################
 ###################EJERCICIO 1.4###################
@@ -244,11 +250,8 @@ f4 = function(pto,coef) {          #funcion de la recta
 }
 z0 = apply(datos,1,f4,coef)        #obtiene los valores de la funcion para datos
 etiqueta = sign(z0)                # apartir de ellos crea las etiquetas
-pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
-abline(coef[2],coef[1])            # pinta la recta
-
-tasa = 0.01
-vector_w_ini=c(0,0,0) 
+#pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
+#abline(coef[2],coef[1])            # pinta la recta
 
 reglog = function(datos,etiqueta,vector_w_ini=c(0,0,0), tasa=0.01){
   N= dim(datos)[1]
@@ -271,15 +274,16 @@ reglog = function(datos,etiqueta,vector_w_ini=c(0,0,0), tasa=0.01){
   }
   diferencia = sqrt(sum((w-vector_w)^2))
   }
-  print(w)
   return(w)
 }
 
 vector_final = reglog(datos=datos, etiqueta=etiqueta)
+
+
 #Obtener g
 a= -vector_final[2]/vector_final[3]
 b= -vector_final[1]/vector_final[3]
-curve(a*x + b, col="orange", add=T)
+#curve(a*x + b, col="orange", add=T)
 
 #Obtener Eout
 nuevos_datos = simula_unifM (N,2,rango)
@@ -291,14 +295,15 @@ estimado_z0 = apply(nuevos_datos,1,f4,coef_estimados)
 etiquetas_estimadas = sign(estimado_z0)
 
 error=mean(etiquetas_real!=etiquetas_estimadas)
-print("Error obtenido regresion logistica:")
-print(error)
+#print("Error obtenido regresion logistica:")
+#print(error)
 
 ###################################################
 ###################EJERCICIO 1.5###################
 ###################################################
+print("###############################Ejercicio 5###################################")
 #Datos train
-digit.train <- read.table("datos/zip.train", header=FALSE)
+digit.train <- read.table("datos/zip.train", header=FALSE) 
 digitos15.train = digit.train[digit.train$V1==1 | digit.train$V1==5,]
 etiquetas_digitos_train = digitos15.train[,1]
 ndigitos_train = nrow(digitos15.train)
@@ -309,16 +314,14 @@ rm(digitos15.train)
 intensidad_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1, mean)
 simetria_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1,fsimetria1)
 datos_train = as.matrix(cbind(intensidad_train,simetria_train))
-#dev.off()
 #plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
-##     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
+#     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
 
 #Regresion
 hiperplanow = regresionlineal(datos_train, etiquetas_digitos_train)
 hiperplanow = PLA_pocket(datos_train, etiquetas_digitos_train, vini=hiperplanow)
-##abline( a=-hiperplanow[1,]/hiperplanow[3,],
-##        b=-hiperplanow[2,]/hiperplanow[3,], 
-#        col="orange")
+#abline( a=-hiperplanow[1,]/hiperplanow[3,],
+#        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
 
 
 #Datos test
@@ -334,12 +337,10 @@ intensidad_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1, mean)
 simetria_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1,fsimetria1)
 simetria_test=simetria_test #porque...
 datos_test = as.matrix(cbind(intensidad_test,simetria_test))
-#dev.off()
 #plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
 #    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
 #abline( a=-hiperplanow[1,]/hiperplanow[3,],
-#       b=-hiperplanow[2,]/hiperplanow[3,], 
-#      col="orange")
+#        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
 
 
 #Apartado b:
@@ -356,6 +357,8 @@ for(i in 1:length(etiquetas_train_fin)){
 }
 distintas_train = length(which(etiquetas_train_fin!=etiquetas_digitos_train))
 Ein_train = (distintas_train*100)/nrow(datos_train)
+#print("Ein en train:")
+#print(Ein_train)
 
 #Para datos_test:
 z0testfin = apply(datos_test,1,f4,coefw)        #obtiene los valores de la funcion para datos
@@ -366,5 +369,8 @@ for(i in 1:length(etiquetas_test_fin)){
 }
 distintas_test = length(which(etiquetas_test_fin!=etiquetas_digitos_test))
 Ein_test = (distintas_test*100)/nrow(datos_test)
+#print("Ein en test")
+#print(Ein_test) 
 
 #Apartado c:
+
