@@ -425,23 +425,65 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
   X = simula_unifM (N=N,1,rango=c(-1,1))
   f = as.function((fun_f))
   Y = f(X) + sigma*epsilon
-  plot(X, Y, xlim=c(-1,1), main="Sec1 Ejer1:Ajusto con g2 y g10")
-  curve(expr=f, add=T, col="red", lw=2)
+  #plot(X, Y, xlim=c(-1,1), main="Sec1 Ejer1:Ajusto con g2 y g10")
+  #curve(expr=f, add=T, col="red", lw=2)
 
   #Ya tengo la función y los datos. Ahora tengo que encontrar g2 y g10
   datos2 = as.matrix(cbind(X,X^2))
   hiperplanow2= reg_lineal(datos2,Y)
-  curve(hiperplanow2[3,]*x^2 + hiperplanow2[2,]*x + hiperplanow2[1,], add=T,
-        col="orange", lw=2, lty=3)
+  #curve(hiperplanow2[3,]*x^2 + hiperplanow2[2,]*x + hiperplanow2[1,], add=T,
+  #      col="orange", lw=2, lty=3)
 
   datos10 = as.matrix(cbind(X,X^2,X^3,X^4,X^5,X^6, X^7,X^8,X^9,X^10))
   hiperplanow10= reg_lineal(datos10,Y)
-  curve(hiperplanow10[11,]*x^10 + hiperplanow10[10,]*x^9 +
-        hiperplanow10[9,]*x^8 + hiperplanow10[8,]*x^7 + hiperplanow10[7,]*x^6+
-        hiperplanow10[6,]*x^5 + hiperplanow10[5,]*x^4 + hiperplanow10[4,]*x^3 +
-        hiperplanow10[3,]*x^2 + hiperplanow10[2,]*x + hiperplanow10[1,], add=T,
-        col="blue", lw=2, lty=3)
-
+  #curve(hiperplanow10[11,]*x^10 + hiperplanow10[10,]*x^9 +
+  #      hiperplanow10[9,]*x^8 + hiperplanow10[8,]*x^7 + hiperplanow10[7,]*x^6+
+  #      hiperplanow10[6,]*x^5 + hiperplanow10[5,]*x^4 + hiperplanow10[4,]*x^3 +
+  #      hiperplanow10[3,]*x^2 + hiperplanow10[2,]*x + hiperplanow10[1,], add=T,
+  #      col="blue", lw=2, lty=3)
+  
+  #Error g2
+  fung2 = as.function(as.polynomial(c(hiperplanow2[1,], hiperplanow2[2,],hiperplanow2[3,])))
+  Eg2_real=(sum((fung2(X)-Y)^2))/N
+  #print("Error con la muestra original usando g2")
+  #print(Eg2_real)
+  
+  nueva_X = simula_unifM (N=N,1,rango=c(-1,1))
+  nueva_Y = f(X) + sigma*epsilon
+  Eg2_fuera=(sum((fung2(nueva_X)-nueva_Y)^2))/N
+  #print("Error con muestra nueva usando g2")
+  #print(Eg2_fuera)
+  
+  #Error g10
+  fung10 = as.function(as.polynomial(c(hiperplanow10[1,], hiperplanow10[2,],
+                                       hiperplanow10[3,], hiperplanow10[4,],
+                                       hiperplanow10[5,], hiperplanow10[6,],
+                                       hiperplanow10[7,], hiperplanow10[8,],
+                                       hiperplanow10[9,], hiperplanow10[10,],
+                                       hiperplanow10[11,])))
+  Eg10_real=(sum((fung10(X)-Y)^2))/N
+  #print("Error con la muestra original usando g10")
+  #print(Eg10_real)
+  
+  #print("Error con muestra nueva usando g10")
+  Eg10_fuera=(sum((fung10(nueva_X)-nueva_Y)^2))/N
+  #print(Eg10_fuera)
+  
+  return(c(Eg2_fuera,Eg10_fuera))
 }
-sobreajusteg2g10(Qf=10, N=50, sigma=0.5)
 
+errores = sobreajusteg2g10(Qf=20, N=50, sigma=1)
+#Hago sobreajuste 150 veces
+limite=149
+for(i in 1:limite){
+   errores = rbind(errores,sobreajusteg2g10(Qf=20, N=50, sigma=1))
+}
+
+#Calculo la media de Eout para g2 y g10
+media_errores = apply(errores,2,sum)/(limite+1)
+print("Media de Eout para g2 y para g10")
+print(media_errores)
+
+sobreajuste=media_errores[2]-media_errores[1]
+print("Sobreajuste")
+print(sobreajuste)
