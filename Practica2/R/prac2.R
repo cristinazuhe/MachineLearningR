@@ -22,6 +22,11 @@ simula_unifM = function (N=2,dims=2, rango = c(0,1)){
              nrow = N, ncol=dims, byrow=T)
 }
 
+simula_gaus <- function(N=2, dims=2, mean=0, sd=1){
+  m = matrix(rnorm(N*dims, mean=mean, sd=sd),
+             nrow = N, ncol=dims, byrow=T)
+}
+
 simula_recta = function (intervalo = c(-1,1),visible=F, ptos = NULL){
   if(is.null(ptos)) m = simula_unifM(2,2,intervalo)
   a = (m[1,2] - m[2,2]) / (m[1,1]-m[2,1]) # calculo de la pendiente
@@ -373,4 +378,70 @@ Ein_test = (distintas_test*100)/nrow(datos_test)
 #print(Ein_test) 
 
 #Apartado c:
+
+
+########################################################################
+############################### SECCION 2 ##############################
+########################################################################
+print("###############################SECCION 2###################################")
+###################################################
+###################EJERCICIO 2.1###################
+###################################################
+print("###############################Ejercicio 1###################################")
+library(orthopolynom)
+reg_lineal <- function(MatrizDatos, Etiquetas){
+  d = dim(MatrizDatos)
+  MatrizDatos = cbind(rep(1,d[1]), MatrizDatos)
+  
+  X = MatrizDatos
+  sv = svd(t(X)%*%X)
+  U = sv$u
+  D = diag(sv$d)
+  V = sv$v
+  
+  XtraX_inv = V%*%solve(D)%*%t(V)
+  Xpseudo = XtraX_inv%*%t(X)
+  #Obtengo w:
+  w = Xpseudo%*%Etiquetas
+  return(w)
+}
+
+sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
+  #Obtengo los polinomios de Lagrange normalizados
+  pol.Leg.Normalizados <- legendre.polynomials(n= Qf-1, normalized=T)
+  #normalizo los coeficientes
+  a = simula_gaus(N=Qf,1,mean=0, sd=1)
+  a=a/sqrt(sum(a^2))
+
+  #obtengo la función f(x)
+  fun_f=0
+  for(i in 1:Qf){
+     fun_f = fun_f + pol.Leg.Normalizados[[i]]*a[i]
+  }
+  #print(integral(fun_f^2,limits=c(-1,1))) #Compruebo que está bien normalizado
+
+  #Añado error a las muestras
+  epsilon = simula_gaus(N=N,1,mean=0, sd=1)
+  X = simula_unifM (N=N,1,rango=c(-1,1))
+  f = as.function((fun_f))
+  Y = f(X) + sigma*epsilon
+  plot(X, Y, xlim=c(-1,1), main="Sec1 Ejer1:Ajusto con g2 y g10")
+  curve(expr=f, add=T, col="red", lw=2)
+
+  #Ya tengo la función y los datos. Ahora tengo que encontrar g2 y g10
+  datos2 = as.matrix(cbind(X,X^2))
+  hiperplanow2= reg_lineal(datos2,Y)
+  curve(hiperplanow2[3,]*x^2 + hiperplanow2[2,]*x + hiperplanow2[1,], add=T,
+        col="orange", lw=2, lty=3)
+
+  datos10 = as.matrix(cbind(X,X^2,X^3,X^4,X^5,X^6, X^7,X^8,X^9,X^10))
+  hiperplanow10= reg_lineal(datos10,Y)
+  curve(hiperplanow10[11,]*x^10 + hiperplanow10[10,]*x^9 +
+        hiperplanow10[9,]*x^8 + hiperplanow10[8,]*x^7 + hiperplanow10[7,]*x^6+
+        hiperplanow10[6,]*x^5 + hiperplanow10[5,]*x^4 + hiperplanow10[4,]*x^3 +
+        hiperplanow10[3,]*x^2 + hiperplanow10[2,]*x + hiperplanow10[1,], add=T,
+        col="blue", lw=2, lty=3)
+
+}
+sobreajusteg2g10(Qf=10, N=50, sigma=0.5)
 
