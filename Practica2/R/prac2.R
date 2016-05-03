@@ -449,8 +449,8 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
   #print(Eg2_real)
   
   nueva_X = simula_unifM (N=N,1,rango=c(-1,1))
-  nueva_Y = f(X) + sigma*epsilon
-  Eg2_fuera=(sum((fung2(nueva_X)-nueva_Y)^2))/N
+  nueva_Y = f(nueva_X) + sigma*epsilon
+  Eg2_fuera=(sum((fung2(nueva_X)-Y)^2))/N
   #print("Error con muestra nueva usando g2")
   #print(Eg2_fuera)
   
@@ -461,7 +461,7 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
                                        hiperplanow10[7,], hiperplanow10[8,],
                                        hiperplanow10[9,], hiperplanow10[10,],
                                        hiperplanow10[11,])))
-  Eg10_real=(sum((fung10(X)-Y)^2))/N
+  Eg10_real=(sum((fung10(X)-nueva_Y)^2))/N
   #print("Error con la muestra original usando g10")
   #print(Eg10_real)
   
@@ -473,8 +473,8 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
 }
 
 errores = sobreajusteg2g10(Qf=20, N=50, sigma=1)
-#Hago sobreajuste 150 veces
-limite=149
+#Hago sobreajuste 400 veces
+limite=399
 for(i in 1:limite){
    errores = rbind(errores,sobreajusteg2g10(Qf=20, N=50, sigma=1))
 }
