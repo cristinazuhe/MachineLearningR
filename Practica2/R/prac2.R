@@ -144,21 +144,35 @@ graddesc = function(
     print(val_ini)
 }
 print("*************************Primera funcion*************************")
-#graddesc(mimain="1.1.a)Primera funcion", interx = c(-2,2), intery=c(-2,2), tasa=0.1)
+print("Ver gráfica 1.1.a)Primera funcion")
+graddesc(mimain="1.1.a)Primera funcion", interx = c(-2,2), intery=c(-2,2), tasa=0.1)
+pulsaTecla()
+
 print("*************************Segunda funcion*************************")
 print("*************************Inicial (1,1)0.01*************************")
-#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.01", maxiter=50)
+graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.01", maxiter=50)
+print("Ver gráfica 1.1.b)Segunda funcion")
+pulsaTecla()
+
 print("*************************Inicial (1,1) 0.1*************************")
-#graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.1", maxiter=50, tasa=0.1)
+graddesc(FUN = fs1e1f2,mimain="1.1.b)Segunda funcion (1,1) 0.1", maxiter=50, tasa=0.1)
+print("Ver gráfica 1.1.b)Segunda funcion")
+pulsaTecla()
 
 print("*************************Inicial (-1,-1)***********************")
-#graddesc(FUN = fs1e1f2, val_ini=c(-1,-1),mimain="1.1.b)Segunda funcion (-1,-1)", maxiter=50)
+graddesc(FUN = fs1e1f2, val_ini=c(-1,-1),mimain="1.1.b)Segunda funcion (-1,-1)", maxiter=50)
+print("Ver gráfica 1.1.b)Segunda funcion")
+pulsaTecla()
 
 print("***********************Inicial (0.1,0.1)************************")
-#graddesc(FUN = fs1e1f2, val_ini=c(0.1,0.1),mimain="1.1.b)Segunda funcion (0.1,0.1)", maxiter=50)
+graddesc(FUN = fs1e1f2, val_ini=c(0.1,0.1),mimain="1.1.b)Segunda funcion (0.1,0.1)", maxiter=50)
+print("Ver gráfica 1.1.b)Segunda funcion")
+pulsaTecla()
 
 print("**********************Inicial (-0.5,-0.5)***********************")
-#graddesc(FUN = fs1e1f2, val_ini=c(-0.5,-0.5),mimain="1.1.b)Segunda funcion (-0.5,-0.5)", maxiter=50)
+graddesc(FUN = fs1e1f2, val_ini=c(-0.5,-0.5),mimain="1.1.b)Segunda funcion (-0.5,-0.5)", maxiter=50)
+print("Ver gráfica 1.1.b)Segunda funcion")
+pulsaTecla()
 
 ###################################################
 ###################EJERCICIO 1.2###################
@@ -189,9 +203,14 @@ coorddesc = function(
 }
 
 print("*************************15 Iteraciones*************************")
-#coorddesc(mimain="1.2. 15 Iteraciones.")
+coorddesc(mimain="1.2. 15 Iteraciones.")
+print("Ver gráfica 1.2. 15 Iteraciones")
+pulsaTecla()
+
 print("*************************30 Iteraciones*************************")
-#coorddesc(maxiter=30, mimain="1.2. 30 Iteraciones.")
+coorddesc(maxiter=30, mimain="1.2. 30 Iteraciones.")
+print("Ver gráfica 1.2. 30 Iteraciones")
+pulsaTecla()
 
 ###################################################
 ###################EJERCICIO 1.3###################
@@ -235,13 +254,17 @@ newton = function(
   plot(x=iteraciones, y=valores, col="purple", main="Descenso valor función.")
 }
 
-#print("Newton partiendo de (1,1)")
-#newton(mimain="Sec1 Ejer3 (1,1)")
-#print("Newton partiendo de (-1,-1)")
-#newton(val_ini=as.matrix(rbind(-1,-1)), mimain="Sec1 Ejer3 (-1,-1)")
-#print("Newton partiendo de (-0.5,-0.5)")
-#???newton(val_ini=as.matrix(rbind(-0.5,-0.5)), mimain="Sec1 Ejer3 (-0.5,-0.5)")
+print("Newton partiendo de (1,1). Ver gráfica")
+newton(mimain="Sec1 Ejer3 (1,1)")
+pulsaTecla()
 
+print("Newton partiendo de (-1,-1). Ver gráfica")
+newton(val_ini=as.matrix(rbind(-1,-1)), mimain="Sec1 Ejer3 (-1,-1)")
+pulsaTecla()
+
+print("Newton partiendo de (-0.5,-0.5). Ver gráfica")
+newton(val_ini=as.matrix(rbind(-0.5,-0.5)), mimain="Sec1 Ejer3 (-0.5,-0.5)")
+pulsaTecla()
 ###################################################
 ###################EJERCICIO 1.4###################
 ###################################################
@@ -255,8 +278,8 @@ f4 = function(pto,coef) {          #funcion de la recta
 }
 z0 = apply(datos,1,f4,coef)        #obtiene los valores de la funcion para datos
 etiqueta = sign(z0)                # apartir de ellos crea las etiquetas
-#pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
-#abline(coef[2],coef[1])            # pinta la recta
+pinta_puntos(datos, intervalo = rango,etiqueta=etiqueta) # utiliza las etiquetas 
+abline(coef[2],coef[1])            # pinta la recta
 
 reglog = function(datos,etiqueta,vector_w_ini=c(0,0,0), tasa=0.01){
   N= dim(datos)[1]
@@ -288,7 +311,7 @@ vector_final = reglog(datos=datos, etiqueta=etiqueta)
 #Obtener g
 a= -vector_final[2]/vector_final[3]
 b= -vector_final[1]/vector_final[3]
-#curve(a*x + b, col="orange", add=T)
+curve(a*x + b, col="orange", add=T)
 
 #Obtener Eout
 nuevos_datos = simula_unifM (N,2,rango)
@@ -300,8 +323,9 @@ estimado_z0 = apply(nuevos_datos,1,f4,coef_estimados)
 etiquetas_estimadas = sign(estimado_z0)
 
 error=mean(etiquetas_real!=etiquetas_estimadas)
-#print("Error obtenido regresion logistica:")
-#print(error)
+print("Error obtenido regresion logistica:")
+print(error)
+pulsaTecla()
 
 ###################################################
 ###################EJERCICIO 1.5###################
@@ -319,15 +343,17 @@ rm(digitos15.train)
 intensidad_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1, mean)
 simetria_train = apply(matriz_Digitos_train[1:ndigitos_train,,],1,fsimetria1)
 datos_train = as.matrix(cbind(intensidad_train,simetria_train))
-#plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
-#     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
+plot(datos_train,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.train",
+     col=etiquetas_digitos_train,pch=etiquetas_digitos_train+3)
 
 #Regresion
 hiperplanow = regresionlineal(datos_train, etiquetas_digitos_train)
 hiperplanow = PLA_pocket(datos_train, etiquetas_digitos_train, vini=hiperplanow)
-#abline( a=-hiperplanow[1,]/hiperplanow[3,],
-#        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
+abline( a=-hiperplanow[1,]/hiperplanow[3,],
+        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
 
+print("Ajuste train. Ver gráfica Sec1:ejer5")
+pulsaTecla()
 
 #Datos test
 digit.test <- read.table("datos/zip.test", header=FALSE)
@@ -342,12 +368,14 @@ intensidad_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1, mean)
 simetria_test = apply(matriz_Digitos_test[1:ndigitos_test,,],1,fsimetria1)
 simetria_test=simetria_test #porque...
 datos_test = as.matrix(cbind(intensidad_test,simetria_test))
-#plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
-#    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
-#abline( a=-hiperplanow[1,]/hiperplanow[3,],
-#        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
+plot(datos_test,xlab="Intensidad Promedio",ylab="Simetria",main="SEC1:ejer5.test",
+    col=etiquetas_digitos_test,pch=etiquetas_digitos_test+3)
+abline( a=-hiperplanow[1,]/hiperplanow[3,],
+        b=-hiperplanow[2,]/hiperplanow[3,], col="orange")
+print("Ajuste test. Ver gráfica Sec1:ejer5")
+pulsaTecla()
 
-
+print("Ein obtenidos:")
 #Apartado b:
 #Para datos_train:
 coefw = c(-hiperplanow[1,]/hiperplanow[3,],-hiperplanow[2,]/hiperplanow[3,]) 
@@ -362,8 +390,8 @@ for(i in 1:length(etiquetas_train_fin)){
 }
 distintas_train = length(which(etiquetas_train_fin!=etiquetas_digitos_train))
 Ein_train = (distintas_train*100)/nrow(datos_train)
-#print("Ein en train:")
-#print(Ein_train)
+print("Ein en train:")
+print(Ein_train)
 
 #Para datos_test:
 z0testfin = apply(datos_test,1,f4,coefw)        #obtiene los valores de la funcion para datos
@@ -374,9 +402,9 @@ for(i in 1:length(etiquetas_test_fin)){
 }
 distintas_test = length(which(etiquetas_test_fin!=etiquetas_digitos_test))
 Ein_test = (distintas_test*100)/nrow(datos_test)
-#print("Ein en test")
-#print(Ein_test) 
-
+print("Ein en test")
+print(Ein_test) 
+pulsaTecla()
 #Apartado c:
 
 
@@ -410,49 +438,51 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
   #Obtengo los polinomios de Lagrange normalizados
   pol.Leg.Normalizados <- legendre.polynomials(n= Qf-1, normalized=T)
   #normalizo los coeficientes
-  a = simula_gaus(N=Qf,1,mean=0, sd=1)
-  a=a/sqrt(sum(a^2))
+  a = rnorm(n = Qf, mean = 0, sd = 1)
+  suma_total= sum(a^2)
+  a=a/sqrt(suma_total)
 
   #obtengo la función f(x)
   fun_f=0
   for(i in 1:Qf){
      fun_f = fun_f + pol.Leg.Normalizados[[i]]*a[i]
   }
-  #print(integral(fun_f^2,limits=c(-1,1))) #Compruebo que está bien normalizado
+  print(integral(fun_f^2,limits=c(-1,1))) #Compruebo que está bien normalizado
 
   #Añado error a las muestras
   epsilon = simula_gaus(N=N,1,mean=0, sd=1)
   X = simula_unifM (N=N,1,rango=c(-1,1))
   f = as.function((fun_f))
   Y = f(X) + sigma*epsilon
-  #plot(X, Y, xlim=c(-1,1), main="Sec1 Ejer1:Ajusto con g2 y g10")
-  #curve(expr=f, add=T, col="red", lw=2)
+  plot(X, Y, xlim=c(-1,1), main="Sec1 Ejer1:Ajusto con g2 y g10")
+  curve(expr=f, add=T, col="red", lw=2)
 
   #Ya tengo la función y los datos. Ahora tengo que encontrar g2 y g10
   datos2 = as.matrix(cbind(X,X^2))
   hiperplanow2= reg_lineal(datos2,Y)
-  #curve(hiperplanow2[3,]*x^2 + hiperplanow2[2,]*x + hiperplanow2[1,], add=T,
-  #      col="orange", lw=2, lty=3)
+  curve(hiperplanow2[3,]*x^2 + hiperplanow2[2,]*x + hiperplanow2[1,], add=T,
+        col="orange", lw=2, lty=3)
 
   datos10 = as.matrix(cbind(X,X^2,X^3,X^4,X^5,X^6, X^7,X^8,X^9,X^10))
   hiperplanow10= reg_lineal(datos10,Y)
-  #curve(hiperplanow10[11,]*x^10 + hiperplanow10[10,]*x^9 +
-  #      hiperplanow10[9,]*x^8 + hiperplanow10[8,]*x^7 + hiperplanow10[7,]*x^6+
-  #      hiperplanow10[6,]*x^5 + hiperplanow10[5,]*x^4 + hiperplanow10[4,]*x^3 +
-  #      hiperplanow10[3,]*x^2 + hiperplanow10[2,]*x + hiperplanow10[1,], add=T,
-  #      col="blue", lw=2, lty=3)
+  curve(hiperplanow10[11,]*x^10 + hiperplanow10[10,]*x^9 +
+        hiperplanow10[9,]*x^8 + hiperplanow10[8,]*x^7 + hiperplanow10[7,]*x^6+
+        hiperplanow10[6,]*x^5 + hiperplanow10[5,]*x^4 + hiperplanow10[4,]*x^3 +
+        hiperplanow10[3,]*x^2 + hiperplanow10[2,]*x + hiperplanow10[1,], add=T,
+        col="blue", lw=2, lty=3)
   
   #Error g2
   fung2 = as.function(as.polynomial(c(hiperplanow2[1,], hiperplanow2[2,],hiperplanow2[3,])))
   Eg2_real=(sum((fung2(X)-Y)^2))/N
-  #print("Error con la muestra original usando g2")
-  #print(Eg2_real)
+  print("Error con la muestra original usando g2")
+  print(Eg2_real)
   
   nueva_X = simula_unifM (N=N,1,rango=c(-1,1))
-  nueva_Y = f(nueva_X) + sigma*epsilon
+  nuevo_epsilon = simula_gaus(N=N,1,mean=0, sd=1)
+  nueva_Y = f(nueva_X) + sigma*nuevo_epsilon
   Eg2_fuera=(sum((fung2(nueva_X)-Y)^2))/N
-  #print("Error con muestra nueva usando g2")
-  #print(Eg2_fuera)
+  print("Error con muestra nueva usando g2")
+  print(Eg2_fuera)
   
   #Error g10
   fung10 = as.function(as.polynomial(c(hiperplanow10[1,], hiperplanow10[2,],
@@ -461,14 +491,14 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
                                        hiperplanow10[7,], hiperplanow10[8,],
                                        hiperplanow10[9,], hiperplanow10[10,],
                                        hiperplanow10[11,])))
-  Eg10_real=(sum((fung10(X)-nueva_Y)^2))/N
-  #print("Error con la muestra original usando g10")
-  #print(Eg10_real)
+  Eg10_real=(sum((fung10(X)-Y)^2))/N
+  print("Error con la muestra original usando g10")
+  print(Eg10_real)
   
-  #print("Error con muestra nueva usando g10")
-  Eg10_fuera=(sum((fung10(nueva_X)-nueva_Y)^2))/N
-  #print(Eg10_fuera)
-  
+  print("Error con muestra nueva usando g10")
+  Eg10_fuera=(sum((fung10(nueva_X)-Y)^2))/N
+  print(Eg10_fuera)
+  print("**************************************")
   return(c(Eg2_fuera,Eg10_fuera))
 }
 
@@ -476,12 +506,14 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
 ###################EJERCICIO 2.2###################
 ###################################################
 print("###############################Ejercicio 2###################################")
+print("Usando Qf=20, N=50, simga=1")
 errores = sobreajusteg2g10(Qf=20, N=50, sigma=1)
 #Hago sobreajuste 400 veces
-limite=399
+limite=1
 for(i in 1:limite){
    errores = rbind(errores,sobreajusteg2g10(Qf=20, N=50, sigma=1))
 }
+
 
 #Calculo la media de Eout para g2 y g10
 media_errores = apply(errores,2,sum)/(limite+1)
