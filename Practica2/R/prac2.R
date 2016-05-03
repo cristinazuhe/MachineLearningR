@@ -472,6 +472,10 @@ sobreajusteg2g10 <- function(Qf=4, N=50, sigma=0.5){
   return(c(Eg2_fuera,Eg10_fuera))
 }
 
+###################################################
+###################EJERCICIO 2.2###################
+###################################################
+print("###############################Ejercicio 2###################################")
 errores = sobreajusteg2g10(Qf=20, N=50, sigma=1)
 #Hago sobreajuste 400 veces
 limite=399
