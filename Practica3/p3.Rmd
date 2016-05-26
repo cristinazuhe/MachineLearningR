@@ -142,7 +142,7 @@ posibles_k <- tune.knn(datos_normalizados, as.factor(mpg01_ambos), k=1:10,
 summary(posibles_k)
 ```
 
-//COMNETARRRRRRRRRRRRR
+//COMNETARRRRRRRRRRRRR. ¿FALLA ALGO EN KNN????ERROR PARECE MUY GRANDE.....
 ```{r}
 predicciones = knn(train_normalizada, test_normalizada, mpg01_train, k=3)
 matriz_confusion_knn = table(predicciones, mpg01_test)
@@ -154,3 +154,85 @@ errorknn = ((matriz_confusion_knn[1,2] + matriz_confusion_knn[2,1])/sum(matriz_c
 print(errorknn)
 ```
 
+//FALTA ÚLTIMO PUNTO.
+
+
+
+
+
+
+
+# EJERCICIO4: Usar el conjunto de datos OJ que es parte del paquete ISLR.
+
+# 1. Crear un conjunto de entrenamiento conteniendo una muestra aleatoria de 800 observaciones, y un conjunto de test conteniendo el resto de las observaciones. Ajustar un árbol a los datos de entrenamiento, con "Purchase" como la variable respuesta y las otras variables como predictores (paquete tree de R). 
+
+En primer lugar, para familiarizarnos con el conjunto de datos OJ, vamos a ver las variables de las que dispone. Hacemos uso de names. 
+```{r}
+library(ISLR)
+library(tree)
+names(OJ)
+set.seed(1013)
+```
+
+Vamos a ajustar el arbol usando Purchase como variable respuesta.
+Tomo 800 indices de observaciones aleatorias y nos quedamos con estas observaciones para el conjunto train. El resto de observaciones lo introducimos en el conjunto test. 
+```{r}
+indices_train800 = sample(nrow(OJ),800)
+trainOJ = OJ[indices_train800,]
+testOJ = OJ[-indices_train800,]
+treeOJ = tree(Purchase~. ,data = trainOJ)
+```
+En el siguiente apartado procedemos a analizar los resultados.
+
+# 2. Usar la función summary() para generar un resumen estadístico acerca del árbol y describir los resultados obtenidos: tasa de error de "training", número de nodos del árbol, etc. (0.5 puntos)
+
+Veamos el resumen estadístico del árbol:
+```{r}
+summary(treeOJ)
+```
+Vemos que para la construcción del árbol se han usado las variables "LoyalCH", "PriceDiff", "SpecialCH" y "ListPriceDiff". Se han generado 8 nodos terminales. La media de la desviación residual es 0.7517 y la tasa de error de traning es de 0.155.
+
+# 3. Crear un dibujo del árbol e interpretar los resultados (0.5 puntos)
+
+Veamos el dibujo del árbol:
+```{r}
+plot(treeOJ)
+text(treeOJ, pretty = 0)
+```
+Vemos que el árbol que comienza dividiendo en función de si el valor de LoyalCH(la fidelidad del usuario con respecto a el zumo de la empresa Citrus Hill) es mayor o menor que 0.5036.
+A continuación se vuelve a subdividir segun "LoyalCH": si la fidelidad inicial era menor que 0.5036 vuelve a dividir en función de si su fidelidad es menor o mayor que 0.276142, mientras que si su fidelidad era mayor que 0.5036, divide en función de si LoyalCH es menor o mayor que 0.764572.
+Volvemos a ver subdivisiones en el árbol que se analizan del mismo modo a como ya hemos visto. 
+
+Ahora vamos a ver las reglas de clasificación más relevantes. Serán aquellas que marcan una subdivisión entre MM(Minute Maid) y CH(Citrus Hill):
+LoyalCH <0.5036, LoyalCH <0.276142, LoyalCH <0.764572, PriceDiff <0.165 y PriceDiff <0.05.
+
+Mientras que las menos relevantes son:
+PriceDiff <0.265.
+
+# 4. Predecir la respuesta de los datos de test, y generar e interpretar la matriz de confusión de los datos de test. ¿Cuál es la tasa de error del test? ¿Cuál es la precisión del test? (1 punto)
+
+```{r}
+probabilidades = predict(treeOJ, testOJ, type="class")
+matriz_confusion = table(testOJ$Purchase, probabilidades)
+print(matriz_confusion)
+error = (matriz_confusion[1,2] + matriz_confusion[2,1])/sum(matriz_confusion)
+print(error)
+```
+Tenemos un error de test de 18.88% aprox., luego tendremos una precisión de test de 81.12% aprox..
+
+# 5. Aplicar la función cv.tree() al conjunto de "training" y determinar el tamaño óptimo del árbol. ¿Qué hace cv.tree? (0.5 puntos)
+
+```{r}
+cvtreeOJ = cv.tree(treeOJ, FUN= prune.tree)
+cvtreeOJ
+```
+La función cv.tree ejecuta un experimento de validación cruzada K veces para encontrar la desviación o el número de errores de clasificación.
+
+El menor error de validación cruzada viene dado por 663, que se corresponde con el árbol que tiene 6 nodos terminales. Luego estos serán los tamaños óptimos del árbol. 
+
+# Bonus-4 (1 punto). Generar un gráfico con el tamaño del árbol en el eje x (número de nodos) y la tasa de error de validación cruzada en el eje y. ¿Qué tamaño de árbol corresponde a la tasa más pequeña de error de clasificación por validación cruzada?
+```{r}
+plot(cvtreeOJ$size, cvtreeOJ$dev, type = "b", xlab = "Tree Size", ylab = "Deviance")
+```
+
+Podemos ver que el tamaño 6 de árbol nos proporciona la tasa más pequeña de error de clasificación por validación cruzada.  
