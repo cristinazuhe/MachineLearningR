@@ -158,6 +158,33 @@ print(errorknn)
 
 
 
+#EJERCICIO 3: Usar el conjunto de datos Boston y las librerías randomForest y gbm de R.
+# 1. Dividir la base de datos en dos conjuntos de entrenamiento (80%) y test (20%).
+
+Vamos a cargar la base de tantos y las librerías que usaremos para los próximos apartados. Ahora, al igual que hacíamos en el ejercicio1, consideramos un 80% de los datos de Boston y los almacenamos en BostonTrain. Los datos restantes los guardamos en BostonTest
+```{r}
+library(randomForest)
+library(MASS)
+set.seed(1)
+indices_train = sample(1:nrow(Boston),8*nrow(Boston)%/%10)
+Boston_train = Boston[indices_train,]
+Boston_test = Boston[-indices_train,]
+```
+
+# 2. Usando la variable medv como salida y el resto como predictoras, ajustar un modelo de regresión usando bagging. Explicar cada uno de los parámetros usados. Calcular el error del test. (1 punto)
+
+Vemos que efectivamente la variable medv está en nuestro conjunto de datos y ajustamos el modelo de regresión usando bagging.  //EXPLICAR LO DEL LIBRO 
+```{r}
+ names(Boston)
+ boston_bagging = randomForest( medv~.,data=Boston , subset=indices_train ,mtry=13,importance =TRUE)
+ boston_bagging
+```
+
+```{r}
+ yhat.bag = predict (boston_bagging , Boston_test)
+ mean((yhat.bag -Boston_test$medv)^2)
+```
+
 
 
 
