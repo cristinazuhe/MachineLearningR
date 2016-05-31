@@ -161,11 +161,11 @@ print(errorknn)
 #EJERCICIO 3: Usar el conjunto de datos Boston y las librerías randomForest y gbm de R.
 # 1. Dividir la base de datos en dos conjuntos de entrenamiento (80%) y test (20%).
 
-Vamos a cargar la base de tantos y las librerías que usaremos para los próximos apartados. Ahora, al igual que hacíamos en el ejercicio1, consideramos un 80% de los datos de Boston y los almacenamos en BostonTrain. Los datos restantes los guardamos en BostonTest
+Vamos a cargar la base de datos y las librerías que usaremos para los próximos apartados. Ahora, al igual que hacíamos en el ejercicio1, consideramos un 80% de los datos de Boston y los almacenamos en BostonTrain. Los datos restantes los guardamos en BostonTest
 ```{r}
 library(randomForest)
 library(MASS)
-set.seed(1)
+set.seed(2)
 indices_train = sample(1:nrow(Boston),8*nrow(Boston)%/%10)
 Boston_train = Boston[indices_train,]
 Boston_test = Boston[-indices_train,]
@@ -173,18 +173,42 @@ Boston_test = Boston[-indices_train,]
 
 # 2. Usando la variable medv como salida y el resto como predictoras, ajustar un modelo de regresión usando bagging. Explicar cada uno de los parámetros usados. Calcular el error del test. (1 punto)
 
-Vemos que efectivamente la variable medv está en nuestro conjunto de datos y ajustamos el modelo de regresión usando bagging.  //EXPLICAR LO DEL LIBRO 
+Vemos que efectivamente la variable medv está en nuestro conjunto de datos y ajustamos el modelo de regresión usando bagging.
+
+Bagging es un caso especial de Random Forest, donde se usa m=p. De modo que podremos usar randromForest para ambas técnicas. 
+
+Consideraremos los índices que tenemos en indices_train del conjunto Boston (podríamos haber cogido directamente data=BostonTrain y no especificar subset). En mtry tenemos que indicar la cantidad de variables que tenemos como predictoras. Nuestro conjunto tiene 14 variables, pero medv la estamos usando como salida. Calculamos el error del test:
 ```{r}
+ set.seed(2)
  names(Boston)
- boston_bagging = randomForest( medv~.,data=Boston , subset=indices_train ,mtry=13,importance =TRUE)
- boston_bagging
+ boston_bagging = randomForest(medv~.,data=Boston, subset=indices_train,mtry=13,ntree=30,importance =TRUE)
+ predict.bag = predict (boston_bagging , Boston_test)
+ mean((predict.bag -Boston_test$medv)^2)
 ```
+Tenemos un error de 6.71
+
+# 3. Ajustar un modelo de regresión usando "Random Forest". Obtener una estimación del número de árboles necesario. Justificar el resto de parámetros usados en el ajuste. Calcular el error de test y compararlo con el obtenido con bagging.
+Usando Random Forest para modelos de regresión, en mtry tenemos m=p/3 como el valor que se establece por defecto. Nosotros lo especificamos para hacerlo visible. Calculamos el error del test del mismo modo:
+```{r}
+set.seed(2)
+boston_rf= randomForest(medv~.,data=Boston , subset=indices_train , mtry=13/3, ntree=30, importance =TRUE)
+predict.rf = predict(boston_rf , Boston_test)
+mean((predict.rf-Boston_test$medv)^2)
+```
+Tenemos un error de 6.32
+
+# 4. Ajustar un modelo de regresión usando Boosting (usar gbm con distribution = 'gaussian'). Calcular el error de test y compararlo con el obtenido con bagging y Random Forest.
+En este caso consideramos una gran cantidad de árboles, aunque no llega a tener el valor por defecto (5000) pues consume más tiempo y no llega a proporcionar grandes mejoras de error. Establecemos una profundidad para los árboles de 8 niveles. 
 
 ```{r}
- yhat.bag = predict (boston_bagging , Boston_test)
- mean((yhat.bag -Boston_test$medv)^2)
+library(gbm)
+set.seed(2)
+boston_boosting = gbm(medv~.,data=Boston_train, distribution = "gaussian", n.trees = 4000, interaction.depth = 8)
+predict.boost = predict(boston_boosting, Boston_test, n.trees = 4000)
+mean((predict.boost-Boston_test$medv)^2)
 ```
 
+El error es de 6.31. En comparación con los erroes obtenimos con bagging y Randon Forest, vemos que este método no merece mucho la pena, pues consigue errores similares sacrificando tiempo al producir una gran cantidad de árboles con una profundidad considerable. 
 
 
 
