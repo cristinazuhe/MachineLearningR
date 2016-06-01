@@ -23,8 +23,8 @@ Así pues, nos quedamos con las variables cylinders, horsepower, acceleration y y
 # b) Seleccionar las variables predictoras que considere más relevantes.
 Vamos a quedarnos con las variables cylinders, horsepower, acceleration y year, pues son las que hemos dicho anteriormente que nos interesan. 
 ```{r}
-Predictoras = cbind(Auto$mpg, Auto$cylinders, Auto$horsepower, Auto$acceleration, Auto$year)
-colnames(Predictoras) = c("mpg", "cylinders", "horsepower", "acceleration", "year") 
+Predictoras = cbind(Auto$mpg, Auto$displacement, Auto$horsepower, Auto$weight, Auto$year)
+colnames(Predictoras) = c("mpg", "displacement", "horsepower", "weight", "year") 
 ```
 Vemos las 5 primeras variables predictoras:
 ```{r}
@@ -37,7 +37,7 @@ Los datos con los índices que no hemos considerado para test, los consideramos p
 Hemos tomado índices aleatorios pues no queremos que la muestra de test y de train se vean influenciadas por nuestra distinción de los conjuntos. 
 ```{r}
 set.seed(2)
-indices_test = sample(1:nrow(Predictoras),2*nrow(Predictoras)%/%10)
+indices_test = sample(nrow(Predictoras), 2*nrow(Predictoras)%/%10, replace=FALSE)
 Predictoras_test = Predictoras[indices_test,]
 Predictoras_train = Predictoras[-indices_test,]
 ```
@@ -89,8 +89,8 @@ Necesito que los valores de mpg01 estén comprendido entre 0 y 1. De modo que vam
 
 Hacemos la regresión logística con el método glm usando las variables cylinders, horsepowe, acceleration y year. 
 ```{r}
-ajuste_rlog <- glm(mpg01 ~ cylinders + horsepower + acceleration + year, 
-                 data= Predictoras_test_mpg01, family=binomial)
+ajuste_rlog <- glm(mpg01 ~ displacement + horsepower + weight + year, 
+                 data= Predictoras_train_mpg01, family=binomial)
 ```
 
 Ahora usamos el método predict para obtenerlas probabilidades y poder obtener la variable mpg01 que predice el modelo. 
@@ -107,7 +107,7 @@ print(matriz_confusion)
 error = (matriz_confusion[1,2] + matriz_confusion[2,1])/sum(matriz_confusion)
 print(error)
 ```
-Al tener un error tan bajo, concluimos que las variables que hemos seleccionado como predictoras son bastante buenas, así como el modelo.
+Al tener un error tan bajo (0.0769), concluimos que las variables que hemos seleccionado como predictoras son bastante buenas, así como el modelo.
 
 
 ## Ajustar un modelo K-NN a los datos de entrenamiento y predecir mpg01 usando solamente las variables seleccionadas en b). ¿Cuál es el error de test en el modelo? ¿Cuál es el valor de K que mejor ajusta los datos? Justificar la respuesta. (Usar el paquete class de R) (1 punto)
@@ -122,13 +122,14 @@ Para usar el algormitmo K-NN tenemos que normalizar los datos. Vamos a ello:
 Normalizamos los datos iniciales y nos quedamos en test con los los datos normalizados de los indices que teníamos y en train con los restantes. 
 ```{r}
 columnas=  dim(Predictoras_train_mpg01)[2]
-datos_normalizados = scale(rbind(Predictoras_train_mpg01[,-columnas],
-                                 Predictoras_test_mpg01[,-columnas]))
-test_normalizada = datos_normalizados[indices_test,]
-train_normalizada = datos_normalizados[-indices_test,]
+datos_normalizados = scale(rbind(Predictoras_test_mpg01[,-columnas],
+                                 Predictoras_train_mpg01[,-columnas]))
+test_normalizada = datos_normalizados[1:dim(Predictoras_test_mpg01)[1],]
+train_normalizada = datos_normalizados[(dim(Predictoras_test_mpg01)[1] +1):
+                                         dim(datos_normalizados)[1],]
 ```
 
-Ahora nos quedamos con el vector mpg01 de los conjuntos train y test.
+Ahora nos quedamos con el vector mpg01 de los conjuntos train y test. Los combinamos en mpg01_ambos.
 ```{r}
 mpg01_train = Predictoras_train_mpg01[,columnas]
 mpg01_test = Predictoras_test_mpg01[,columnas]
@@ -142,19 +143,34 @@ posibles_k <- tune.knn(datos_normalizados, as.factor(mpg01_ambos), k=1:10,
 summary(posibles_k)
 ```
 
-//COMNETARRRRRRRRRRRRR. ¿FALLA ALGO EN KNN????ERROR PARECE MUY GRANDE.....
+Vemos que el valor de k que mejor ajusta los datos es k=4, de modo que usaremos este valor para aplicar KNN. Al igual que hacíamos antes, vemos la matriz de confunsión o obtenemos el error de test. 
 ```{r}
-predicciones = knn(train_normalizada, test_normalizada, mpg01_train, k=3)
+predicciones = knn(train_normalizada, test_normalizada, mpg01_train, k=4)
 matriz_confusion_knn = table(predicciones, mpg01_test)
 print(matriz_confusion_knn)
-```
-
-```{r}
 errorknn = ((matriz_confusion_knn[1,2] + matriz_confusion_knn[2,1])/sum(matriz_confusion_knn))
 print(errorknn)
 ```
+Obtenemos un error de 0.0256. Vemos que ha dismunuido con respecto al modelo que hacíamos en el apartado anterior. 
 
-//FALTA ÚLTIMO PUNTO.
+
+## Pintar las curvas ROC (instalar paquete ROCR en R) y comparar y valorar los resultados obtenidos para ambos modelos. 
+Haremos uso de la función rocplot siguiente:
+```{r roc}
+library(ROCR)
+rocplot=function(pred, truth, ...){ #pag 365
+  predob = prediction (pred, truth)
+  perf = performance (predob, "tpr", "fpr")
+  plot(perf, ...)
+}
+
+rocplot(probabilidades01, Predictoras_test_mpg01$mpg01)
+rocplot(as.numeric(predicciones), mpg01_test)
+```
+Estas son las curvas ROC para ambos modelos. El primero para regresión logística y el segundo para KNN con k=4. 
+//EXPLICAR GRAFICAS????????????????????????????
+
+//FALTAN BONUS.
 
 
 
