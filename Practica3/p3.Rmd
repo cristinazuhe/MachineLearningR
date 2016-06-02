@@ -171,6 +171,92 @@ Estas son las curvas ROC para ambos modelos. El primero para regresión logística
 //EXPLICAR GRAFICAS????????????????????????????
 
 //FALTAN BONUS.
+## Bonus-1. (1 punto) Estimar el error de test de ambos modelos (RL, K-NN) pero usando Validación Cruzada de 5-particiones. Comparar con los resultados obtenidos en el punto anterior.
+
+
+
+
+
+#EJERCICIO 2:Usar la base de datos Boston (en el paquete MASS de R) para ajustar un modelo que prediga si dado un suburbio este tiene una tasa de criminalidad (crim) por encima o por debajo de la mediana. Para ello considere la variable crim como la variable salida y el resto como variables predictoras.
+
+Al igual que hacíamos en el ejercicio anterior, creamos una nueva variable que nos dice que la tasa de criminalidad de cada dato está por encima (1) o por debajo de la mediana (-1). La añadimos a nuestro conjunto de datos y particionamos en conjunto test y train.
+```{r}
+library(randomForest)
+library(MASS)
+library("glmnet")
+set.seed(2)
+mediana_crim = median(Boston$crim)
+Boston_crim01 = data.frame(Boston, crim01=sign(Boston[,"crim"] - mediana_crim))
+
+indices_train = sample(nrow(Boston_crim01), 8*nrow(Boston_crim01)%/%10, replace=FALSE)
+Boston_train_crim01 = Boston_crim01[indices_train,]
+Boston_test_crim01 = Boston_crim01[-indices_train,]
+```
+
+
+## a) Encontrar el subconjunto óptimo de variables predictoras a partir de un modelo de regresión-LASSO (usar paquete glmnet de R) donde seleccionamos solo aquellas variables con coeficiente mayor de un umbral prefijado. (1 punto)
+
+Nos quedamos con los datos de Boston sin las variables crim y crim01 y con unicamente variable crim, que es la que tratamos de predecir.
+alpha=1 indica que estamos realizando un modelo LASSO. 
+Nos quedamos con aquellas variables que superan un umbral prefijado, en nuestro caso lo establecemos a 0.1.
+```{r}
+Boston_sinCrims = model.matrix(crim~.-crim-crim01, data=Boston_train_crim01)[,-1]
+Boston_solocrim = as.matrix(Boston_train_crim01[,1])
+
+cv.lasso = cv.glmnet(x = Boston_sinCrims, y = Boston_solocrim, alpha=1)
+lasso = glmnet(x = Boston_sinCrims, y = Boston_solocrim, alpha=1)
+lasso.coef = predict(lasso, type = "coefficients", s = cv.lasso$lambda.min)[1:14,]
+lasso.coef
+
+umbral = 0.1
+predictoras_umbral <- lasso.coef[abs(lasso.coef) > umbral ]
+predictoras_umbral
+seleccionadas = names(predictoras_umbral[2:length(predictoras_umbral)])
+```
+Hemos trabajado con el conjunto de entrenamiento. Podríamos haber considerado todo el conjunto de datos Boston simplemente cambiando BostonTrainCrim01 por BostonCrim01, pero nos ha parecido más adecuado hacer el particionamiento desde un principio. 
+
+## b) Ajustar un modelo de regresión regularizada con "weight-decay" (ridgeregression) y las variables seleccionadas. Estimar el error residual del modelo y discutir si el comportamiento de los residuos muestran algún indicio de "underfitting".
+
+Usamos el modelo ridge regression con las variables que teníamos seleccionadas anteriormente. A diferencia de antes, alpha=0. Finalmente calculamos el error:
+
+```{r}
+rr = glmnet(x = as.matrix(Boston_train_crim01[,c(seleccionadas)]), y = Boston_solocrim, alpha=0)
+ridge.pred <- predict(rr, newx = as.matrix(Boston_test_crim01[,c(seleccionadas)]),
+                      s=cv.lasso$lambda.min, type = "response")
+error <- mean((ridge.pred - Boston_test_crim01[,1])^2)
+
+```
+Obtenemos un eror de 46.7%. Es excesivamente grande, lo que nos lleva a pensar que tenemos underfitting. 
+
+## c) Definir una nueva variable con valores -1 y 1 usando el valor de la mediana de la variable crim como umbral. Ajustar un modelo SVM que prediga la nueva variable definida. (Usar el paquete e1071 de R). Describir con detalle cada uno de los pasos dados en el aprendizaje del modelo SVM. Comience ajustando un modelo lineal y argumente si considera necesario usar algún núcleo. Valorar los resultados del uso de distintos núcleos.
+Estas variables ya las definimos al comienzo del ejercicios y las añadimos como una variable nueva en BostonTestCrim01 y BostonTrainCrim01.
+```{r}
+set.seed(2)
+library("e1071")
+BostonSVM <- svm(crim01~., data=Boston_train_crim01, kernel="linear", 
+                 cost=1, scale = FALSE)
+crime.pred <- predict(BostonSVM, Boston_train_crim01)
+crime.pred.class <- 2*(crime.pred > 0)-1
+matriz = table(predict=crime.pred.class, truth=Boston_train_crim01$crim01)
+error = ((matriz[1,2] + matriz[2,1])/sum(matriz))
+print(error)
+```
+Obtenemos un error de 0.1825. 
+
+Hemos probado con kernel polynomial pero tarda demasiado y obtenemos un error de 0.395. Probamos con un núcleo radial:
+```{r}
+BostonSVM2 <- svm(crim01~., data=Boston_train_crim01, kernel="radial", 
+                  cost=1, scale = FALSE)
+crime.pred2 <- predict(BostonSVM2, Boston_train_crim01)
+crime.pred2.class <- 2*(crime.pred2 > 0)-1
+matriz2 = table(predict=crime.pred2.class, truth=Boston_train_crim01$crim01)
+error2 = ((matriz2[1,2] + matriz2[2,1])/sum(matriz2))
+print(error2)
+```
+Obtenemos un error de 0.
+
+
+
 
 
 
