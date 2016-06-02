@@ -16,7 +16,7 @@ boxplot(Auto)
 ```
 Tras visualizar ambas gráficas, vemos que las variables origin y name no nos permiten predecir la variable mpg pues en name-mpg tenemos una nube de puntos dispersa en todo el intervalo y en origin-mpg no tenemos una distribución que nos permita establecer relaciones entre ambas. Las otras variables sí parecen útiles para predecir a mpg.  
 
-Analizando un poco más estas otras variables útiles, vemos que displacement, horsepowe y weight mantienen cierta dependencia lineal. De modo que podemos considerar sólamente una de ellas, en concreto, vamos a considerar la variable horsepowe ya que parece que nos va a permitir predecir mejor (mirando la tendencia de las gráficas).
+Analizando un poco más estas otras variables útiles, vemos que displacement, horsepowe y weight mantienen cierta dependencia lineal. De modo que podemos considerar sólamente una de ellas, en concreto, vamos a considerar la variable horsepower ya que parece que nos va a permitir predecir mejor (mirando la tendencia de las gráficas).
 
 Así pues, nos quedamos con las variables cylinders, horsepower, acceleration y year. 
 
@@ -55,10 +55,14 @@ Obtenemos la media de los valores mpg de Auto.
 Añadimos una columna con mpg01 a las variables Predictorias train y test según el signo que obtenemos al hacer la diferencia de la mediana con el valor mpg de cada dato.
 ```{r}
 mediana_mpg = median(Auto$mpg)
-Predictoras_train_mpg01 = data.frame(Predictoras_train, 
-                                     mpg01=sign(Predictoras_train[,"mpg"] - mediana_mpg))
-Predictoras_test_mpg01 = data.frame(Predictoras_test, 
-                                    mpg01=sign(Predictoras_test[,"mpg"] - mediana_mpg))
+Predictoras_mpg01 = data.frame(Predictoras, 
+                              mpg01 = sign(Predictoras[,"mpg"] - mediana_mpg))
+Predictoras_train_mpg01 = Predictoras_mpg01[-indices_test,]
+Predictoras_test_mpg01 = Predictoras_mpg01[indices_test,]
+#Predictoras_train_mpg01 = data.frame(Predictoras_train, 
+#                                     mpg01=sign(Predictoras_train[,"mpg"] - mediana_mpg))
+#Predictoras_test_mpg01 = data.frame(Predictoras_test, 
+#                                    mpg01=sign(Predictoras_test[,"mpg"] - mediana_mpg))
 ```
 
 Veamos la media para ver que la nueva variable se obtiene correctamente.
@@ -85,12 +89,16 @@ Necesito que los valores de mpg01 estén comprendido entre 0 y 1. De modo que vam
   if((Predictoras_train_mpg01[i,"mpg01"]) == -1)
       Predictoras_train_mpg01[i,"mpg01"] = 0
  }
+ for(i in 1:nrow(Predictoras_mpg01)){
+  if((Predictoras_mpg01[i,"mpg01"]) == -1)
+      Predictoras_mpg01[i,"mpg01"] = 0
+ }
 ```
 
-Hacemos la regresión logística con el método glm usando las variables cylinders, horsepowe, acceleration y year. 
+Hacemos la regresión logística con el método glm usando las variables cylinders, horsepower, acceleration y year. 
 ```{r}
 ajuste_rlog <- glm(mpg01 ~ displacement + horsepower + weight + year, 
-                 data= Predictoras_train_mpg01, family=binomial)
+                 data= Predictoras_train_mpg01, family="binomial")
 ```
 
 Ahora usamos el método predict para obtenerlas probabilidades y poder obtener la variable mpg01 que predice el modelo. 
@@ -168,10 +176,129 @@ rocplot(probabilidades01, Predictoras_test_mpg01$mpg01)
 rocplot(as.numeric(predicciones), mpg01_test)
 ```
 Estas son las curvas ROC para ambos modelos. El primero para regresión logística y el segundo para KNN con k=4. 
-//EXPLICAR GRAFICAS????????????????????????????
 
-//FALTAN BONUS.
 ## Bonus-1. (1 punto) Estimar el error de test de ambos modelos (RL, K-NN) pero usando Validación Cruzada de 5-particiones. Comparar con los resultados obtenidos en el punto anterior.
+
+
+//BORRAR ESTO!!!
+```{r}
+library(ISLR)
+Predictoras = cbind(Auto$mpg, Auto$displacement, Auto$horsepower, Auto$weight, Auto$year)
+colnames(Predictoras) = c("mpg", "displacement", "horsepower", "weight", "year") 
+set.seed(2)
+indices_test = sample(nrow(Predictoras), 2*nrow(Predictoras)%/%10, replace=FALSE)
+Predictoras_test = Predictoras[indices_test,]
+Predictoras_train = Predictoras[-indices_test,]
+mediana_mpg = median(Auto$mpg)
+Predictoras_mpg01 = data.frame(Predictoras, 
+                              mpg01 = sign(Predictoras[,"mpg"] - mediana_mpg))
+Predictoras_train_mpg01 = Predictoras_mpg01[-indices_test,]
+Predictoras_test_mpg01 = Predictoras_mpg01[indices_test,]
+
+ for(i in 1:nrow(Predictoras_test_mpg01)){
+  if((Predictoras_test_mpg01[i,"mpg01"]) == -1)
+      Predictoras_test_mpg01[i,"mpg01"] = 0
+ }
+ for(i in 1:nrow(Predictoras_train_mpg01)){
+  if((Predictoras_train_mpg01[i,"mpg01"]) == -1)
+      Predictoras_train_mpg01[i,"mpg01"] = 0
+ }
+ for(i in 1:nrow(Predictoras_mpg01)){
+  if((Predictoras_mpg01[i,"mpg01"]) == -1)
+      Predictoras_mpg01[i,"mpg01"] = 0
+ }
+
+ajuste_rlog <- glm(mpg01 ~ displacement + horsepower + weight + year, 
+                 data= Predictoras_train_mpg01, family="binomial")
+probabilidades = predict(ajuste_rlog, Predictoras_test_mpg01, type="response")
+probabilidades01 = rep(1,dim(Predictoras_test_mpg01)[1])
+probabilidades01[probabilidades<0.5] = 0
+matriz_confusion = table(probabilidades01, Predictoras_test_mpg01$mpg01)
+print(matriz_confusion)
+error = (matriz_confusion[1,2] + matriz_confusion[2,1])/sum(matriz_confusion)
+print(error)
+library(class)
+library(e1071)
+set.seed(2)
+
+columnas=  dim(Predictoras_train_mpg01)[2]
+datos_normalizados = scale(rbind(Predictoras_test_mpg01[,-columnas],
+                                 Predictoras_train_mpg01[,-columnas]))
+test_normalizada = datos_normalizados[1:dim(Predictoras_test_mpg01)[1],]
+train_normalizada = datos_normalizados[(dim(Predictoras_test_mpg01)[1] +1):
+                                         dim(datos_normalizados)[1],]
+
+mpg01_train = Predictoras_train_mpg01[,columnas]
+mpg01_test = Predictoras_test_mpg01[,columnas]
+mpg01_ambos = c(mpg01_train, mpg01_test)
+posibles_k <- tune.knn(datos_normalizados, as.factor(mpg01_ambos), k=1:10,
+                       tune_control = tune.control(sampling = "cross"))
+summary(posibles_k)
+predicciones = knn(train_normalizada, test_normalizada, mpg01_train, k=4)
+matriz_confusion_knn = table(predicciones, mpg01_test)
+print(matriz_confusion_knn)
+errorknn = ((matriz_confusion_knn[1,2] + matriz_confusion_knn[2,1])/sum(matriz_confusion_knn))
+print(errorknn)
+
+```
+
+
+
+Estimamos el error para regresión logística. Obtenemos el error del mismo modo que hacíamos en el apartado de Regresión Logística, pero ahora vamos cambiando los conjuntos de entrenamiento y test. Vamos realizando 5 particiones del conjunto total, siendo el menor en cada caso, el conjunto de test. 
+```{r}
+particiones = 5
+tope = round((nrow(Predictoras))/particiones)
+
+vector_errores = vector()
+for(i in 0:(particiones-1)){
+  test.index_aux = ((i*tope)+1):(tope*(i+1))
+  
+   mpg01.test_aux = mpg01_ambos[test.index_aux]
+   Predictoras_test_aux = Predictoras_mpg01[test.index_aux,]
+   Predictoras_train_aux = Predictoras_mpg01[-test.index_aux,]
+
+   ajuste_rlog <- glm(mpg01 ~ displacement + horsepower + weight + year, 
+                 data= Predictoras_train_aux, family="binomial")
+   probabilidades = predict(ajuste_rlog, Predictoras_test_aux, type="response")
+   probabilidades01 = rep(1,length(probabilidades))
+   probabilidades01[probabilidades<0.5] = 0 
+   
+   m_confusion_aux = table(probabilidades01, Predictoras_test_aux$mpg01)
+   error_aux = (m_confusion_aux[1,2] + m_confusion_aux[2,1])/sum(m_confusion_aux)
+
+   vector_errores = append(vector_errores, error_aux)
+}
+paste("Error medio en regresión logística: ", mean(vector_errores)*100, "%")
+```
+Obtenemos un error medio de 10%, bastante aceptable. 
+
+Ahora estimamos el error para KNN.
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,12 +312,12 @@ library(randomForest)
 library(MASS)
 library("glmnet")
 set.seed(2)
-mediana_crim = median(Boston$crim)
-Boston_crim01 = data.frame(Boston, crim01=sign(Boston[,"crim"] - mediana_crim))
+#mediana_crim = median(Boston$crim)
+#Boston_crim01 = data.frame(Boston, crim01=sign(Boston[,"crim"] - mediana_crim))
 
-indices_train = sample(nrow(Boston_crim01), 8*nrow(Boston_crim01)%/%10, replace=FALSE)
-Boston_train_crim01 = Boston_crim01[indices_train,]
-Boston_test_crim01 = Boston_crim01[-indices_train,]
+indices_train = sample(nrow(Boston), 8*nrow(Boston)%/%10, replace=FALSE)
+Boston_train = Boston[indices_train,]
+Boston_test = Boston[-indices_train,]
 ```
 
 
@@ -200,15 +327,15 @@ Nos quedamos con los datos de Boston sin las variables crim y crim01 y con unica
 alpha=1 indica que estamos realizando un modelo LASSO. 
 Nos quedamos con aquellas variables que superan un umbral prefijado, en nuestro caso lo establecemos a 0.1.
 ```{r}
-Boston_sinCrims = model.matrix(crim~.-crim-crim01, data=Boston_train_crim01)[,-1]
-Boston_solocrim = as.matrix(Boston_train_crim01[,1])
+Boston_sinCrim = model.matrix(crim~.-crim, data=Boston_train)[,-1]
+Boston_solocrim = as.matrix(Boston_train[,1])
 
-cv.lasso = cv.glmnet(x = Boston_sinCrims, y = Boston_solocrim, alpha=1)
-lasso = glmnet(x = Boston_sinCrims, y = Boston_solocrim, alpha=1)
+cv.lasso = cv.glmnet(x = Boston_sinCrim, y = Boston_solocrim, alpha=1)
+lasso = glmnet(x = Boston_sinCrim, y = Boston_solocrim, alpha=1)
 lasso.coef = predict(lasso, type = "coefficients", s = cv.lasso$lambda.min)[1:14,]
 lasso.coef
 
-umbral = 0.1
+umbral = 0.5
 predictoras_umbral <- lasso.coef[abs(lasso.coef) > umbral ]
 predictoras_umbral
 seleccionadas = names(predictoras_umbral[2:length(predictoras_umbral)])
@@ -220,19 +347,27 @@ Hemos trabajado con el conjunto de entrenamiento. Podríamos haber considerado to
 Usamos el modelo ridge regression con las variables que teníamos seleccionadas anteriormente. A diferencia de antes, alpha=0. Finalmente calculamos el error:
 
 ```{r}
-rr = glmnet(x = as.matrix(Boston_train_crim01[,c(seleccionadas)]), y = Boston_solocrim, alpha=0)
-ridge.pred <- predict(rr, newx = as.matrix(Boston_test_crim01[,c(seleccionadas)]),
+rr = glmnet(x = as.matrix(Boston_train[,c(seleccionadas)]), y = Boston_solocrim, alpha=0)
+ridge.pred <- predict(rr, newx = as.matrix(Boston_test[,c(seleccionadas)]),
                       s=cv.lasso$lambda.min, type = "response")
-error <- mean((ridge.pred - Boston_test_crim01[,1])^2)
+error <- mean((ridge.pred - Boston_test[,1])^2)
+error2 = mean((abs(ridge.pred - Boston_test[,1])))
+print(error)
+print(error2)
 
 ```
-Obtenemos un eror de 46.7%. Es excesivamente grande, lo que nos lleva a pensar que tenemos underfitting. 
+Obtenemos un error de 47.3. Parece demasiado grande, de modo que calculamos el error2 haciendo la diferencia absoluta de los valores. Vemos que ahora el error es de 2.9, sería casi un 3%. Esto nos lleva a pensar que tenemos underfitting. 
 
 ## c) Definir una nueva variable con valores -1 y 1 usando el valor de la mediana de la variable crim como umbral. Ajustar un modelo SVM que prediga la nueva variable definida. (Usar el paquete e1071 de R). Describir con detalle cada uno de los pasos dados en el aprendizaje del modelo SVM. Comience ajustando un modelo lineal y argumente si considera necesario usar algún núcleo. Valorar los resultados del uso de distintos núcleos.
 Estas variables ya las definimos al comienzo del ejercicios y las añadimos como una variable nueva en BostonTestCrim01 y BostonTrainCrim01.
 ```{r}
 set.seed(2)
 library("e1071")
+mediana_crim = median(Boston$crim)
+Boston_crim01 = data.frame(Boston, crim01=sign(Boston[,"crim"] - mediana_crim))
+Boston_train_crim01 = Boston_crim01[indices_train,]
+Boston_test_crim01 =  Boston_crim01[-indices_train,]
+
 BostonSVM <- svm(crim01~., data=Boston_train_crim01, kernel="linear", 
                  cost=1, scale = FALSE)
 crime.pred <- predict(BostonSVM, Boston_train_crim01)
@@ -241,9 +376,10 @@ matriz = table(predict=crime.pred.class, truth=Boston_train_crim01$crim01)
 error = ((matriz[1,2] + matriz[2,1])/sum(matriz))
 print(error)
 ```
-Obtenemos un error de 0.1825. 
 
-Hemos probado con kernel polynomial pero tarda demasiado y obtenemos un error de 0.395. Probamos con un núcleo radial:
+Obtenemos un error del 18%.
+
+Hemos probado con kernel polynomial pero tarda demasiado y obtenemos un error de 39%. Probamos con un núcleo radial:
 ```{r}
 BostonSVM2 <- svm(crim01~., data=Boston_train_crim01, kernel="radial", 
                   cost=1, scale = FALSE)
@@ -253,7 +389,7 @@ matriz2 = table(predict=crime.pred2.class, truth=Boston_train_crim01$crim01)
 error2 = ((matriz2[1,2] + matriz2[2,1])/sum(matriz2))
 print(error2)
 ```
-Obtenemos un error de 0.
+Obtenemos un error del 0%.
 
 
 
