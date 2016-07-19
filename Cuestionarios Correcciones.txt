@@ -1,0 +1,9 @@
+Cuestionario 1 -->
+ 	Contestaciones erróneas/no contestadas:4,5,12
+	Contestaciones parciales:2
+Cuestionario 2 -->
+	Contestaciones erroneas/no contestadas:1,4,5,9,10
+	Contestaciones parciales:3
+Cuestionario 3 -->
+	Contestaciones erroneas/no contestadas:3,4,5,6,7,9
+	Contestaciones parciales:1,10
